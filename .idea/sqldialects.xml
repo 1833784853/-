@@ -4,6 +4,7 @@
     <file url="file://$PROJECT_DIR$/src/main/resources/mappers/rls/LoginRegisterMapper.xml" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/mappers/rls/OrdersMapper.xml" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/mappers/rls/RoomSourceMapper.xml" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mappers/rls/UserInfoMapper.xml" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/mappers/rls/UserJurisdictionMenuMapper.xml" dialect="GenericSQL" />
   </component>
 </project>

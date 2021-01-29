@@ -47,4 +47,8 @@
     <update id="updateBindWxOpenid" parameterType="map">
         update loginregister set wxOpenid = #{openid} where userID = #{userid};
     </update>
+
+    <update id="updateUserType" parameterType="map">
+        update loginregister set userType = #{userType} where userID = #{userID};
+    </update>
 </mapper>

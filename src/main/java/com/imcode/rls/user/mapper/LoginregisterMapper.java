@@ -30,4 +30,6 @@ public interface LoginregisterMapper {
     WxUser getWxUser(String wxOpenid);
 
     boolean updateBindWxOpenid(Map<String,String> map);
+
+    boolean updateUserType(Map<String,String> map);
 }
