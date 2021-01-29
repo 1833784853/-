@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+                        http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                        http://www.springframework.org/schema/context
+                          http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+
+    <!--开启注解扫码-->
+    <context:component-scan base-package="com.imcode.*.*.controller"/>
+    <!--    springmvc注解支持-->
+    <mvc:annotation-driven/>
+
+    <!--    不拦截静态资源-->
+    <mvc:default-servlet-handler/>
+    <mvc:annotation-driven>
+        <!-- 消息转换器 -->
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value="text/html;charset=UTF-8"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 4.配置内部资源视图解析器
+        prefix:配置路径前缀
+        suffix:配置文件后缀
+     -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--        限制文件上传总大小 -->
+        <property name="maxUploadSize" value="10485760"/>
+
+        <!--        处理文件名中文乱码-->
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="resolveLazily" value="true"/>
+    </bean>
+
+</beans>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imcode.rls.orders.mapper.OrdersMapper">
+    <insert id="addBanner">
+        insert into banner (bannerImgURL,bannerTitle,bannerContent) values (#{bannerImgUrl},#{bannerTitle},#{bannerContent});
+    </insert>
+    <select id="getBannerAll" resultType="com.imcode.rls.orders.model.Banner">
+        select * from banner
+    </select>
+    <select id="getRoomNews" resultMap="roomNews" parameterType="map">
+        select * from roomnews  order by newTime desc limit #{start},#{end}
+    </select>
+    <resultMap id="roomNews" type="com.imcode.rls.orders.model.RoomNews">
+        <association property="roomNO" column="roomNO" javaType="com.imcode.rls.roomsource.model.RoomSource"   select="getRoomSource"/>
+        <association property="userID" javaType="com.imcode.rls.userinfo.model.UserInfo" column="userID" select="getUserInfo" />
+        <association property="newTypeID" javaType="com.imcode.rls.orders.model.NewTypes" column="newTypeID" select="getNewType"/>
+    </resultMap>
+    <select id="getUserInfo" resultMap="user">
+            select * from userinfo where userID = #{userID}
+    </select>
+    <resultMap id="user" type="com.imcode.rls.userinfo.model.UserInfo">
+        <association property="userID" column="userID" javaType="com.imcode.rls.user.model.Loginregister" select="getUser" />
+    </resultMap>
+    <select id="getUser" resultType="com.imcode.rls.user.model.Loginregister">
+        select * from loginregister where userID = #{userID}
+    </select>
+
+    <select id="getRoomSource" resultType="com.imcode.rls.roomsource.model.RoomSource">
+        select * from roomsource where roomNO = #{roomNO}
+    </select>
+
+    <select id="getNewTypes" resultType="com.imcode.rls.orders.model.NewTypes">
+        select * from newtypes
+    </select>
+
+    <insert id="addNews" parameterType="map">
+        insert into roomnews(roomNO,userID,newTitle,newDescription,newHTML,newTime,newTypeID) values (#{roomNO},#{userID},#{newTitle},#{newDescription},#{newHTML},#{newTime},#{newTypeID});
+    </insert>
+
+    <select id="getNewType" resultType="com.imcode.rls.orders.model.NewTypes" parameterType="int">
+        select * from newtypes where id = #{newTypeID};
+    </select>
+
+    <select id="getNewTypeByName" resultType="com.imcode.rls.orders.model.NewTypes">
+        select * from newtypes where newTypeName = #{typeName};
+    </select>
+
+    <insert id="addNewsType" parameterType="com.imcode.rls.orders.model.NewTypes">
+        insert into newtypes(newTypeName) values (#{newTypeName});
+    </insert>
+
+    <select id="getNews" resultMap="roomNews">
+        select * from roomnews where roomNewID = #{roomNewsID};
+    </select>
+
+    <update id="updateNews" parameterType="map">
+        update roomnews set roomNO = #{roomNO},userID = #{userID},newTitle = #{newTitle}, newDescription= #{newDescription}, newHTML= #{newHTML}, newTime= #{newTime}, newTypeID= #{newTypeID} where roomNewID = #{roomNewID};
+    </update>
+
+    <select id="getNewsDataByNewsType" resultMap="roomNews">
+        select * from roomnews where newTypeID = #{newTypeID} order by newTime desc limit 0,4
+    </select>
+
+    <select id="getCountNewsNumber" resultType="int">
+        select count(1) as count from roomnews
+    </select>
+
+    <delete id="deleteNews">
+        delete from roomnews where roomNewID = #{roomNewID}
+    </delete>
+
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imcode.rls.user.mapper.LoginregisterMapper">
+    <select id="getLoginregister" resultType="com.imcode.rls.user.model.Loginregister">
+        select * from loginregister;
+    </select>
+    <insert id="addUser">
+        insert into loginregister values (#{userId},#{userName},#{userPassword},#{userPhone},#{userType},#{userStatus},#{registerTime},null);
+    </insert>
+
+    <select id="getLoginregisterByNameAndPwd" resultType="com.imcode.rls.user.model.Loginregister" parameterType="map">
+        select * from loginregister where userName = #{username} and userPassword = #{password}
+    </select>
+    <select id="getLoginregisterByName" resultType="com.imcode.rls.user.model.Loginregister">
+        select * from loginregister where userName = #{username}
+    </select>
+    <select id="getPhone" resultType="com.imcode.rls.user.model.Loginregister">
+        select * from loginregister where userPhone = #{phone}
+    </select>
+
+    <select id="getPhoneAndPwd" resultType="com.imcode.rls.user.model.Loginregister" parameterType="map">
+        select * from loginregister where userPhone = #{phone} and userPassword = #{password}
+    </select>
+
+    <select id="getLoginregisterByID" resultType="com.imcode.rls.user.model.Loginregister">
+        select * from loginregister where userID = #{userID}
+    </select>
+
+    <select id="getOpenidUser" resultMap="getWxUserPojo">
+        select * from loginregister where wxOpenid = #{openid};
+    </select>
+
+    <resultMap id="getWxUserPojo" type="com.imcode.rls.user.model.Loginregister">
+        <association property="wxOpenid" column="wxOpenid" javaType="com.imcode.rls.user.model.WxUser"
+                     select="getWxUser"/>
+    </resultMap>
+
+    <select id="getWxUser" resultType="com.imcode.rls.user.model.WxUser">
+        select * from wxuser where openid = #{wxOpenid};
+    </select>
+
+    <insert id="addWxUser" parameterType="com.imcode.rls.user.model.WxUser">
+        insert into wxuser values (#{openid},#{nickname},#{sex},#{province},#{city},#{country},#{headimgurl})
+    </insert>
+    <update id="updateBindWxOpenid" parameterType="map">
+        update loginregister set wxOpenid = #{openid} where userID = #{userid};
+    </update>
+</mapper>

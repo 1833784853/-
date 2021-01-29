@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imcode.rls.roomsource.mapper.RoomSourceMapper">
+    <select id="getRoomSourceList" resultMap="roomsourcelist">
+        select * from roomsource;
+    </select>
+    <resultMap id="roomsourcelist" type="com.imcode.rls.roomsource.model.RoomSource">
+        <result property="roomID" column="roomID"/>
+        <result property="roomNO" column="roomNO"/>
+        <result property="roomAddress" column="roomAddress"/>
+        <result property="roomArea" column="roomArea"/>
+        <result property="roomStatus" column="roomStatus"/>
+        <result property="roomTime" column="roomTime"/>
+        <result property="roomLatelyTime" column="roomLatelyTime"/>
+        <result property="roomDeleteStatus" column="roomDeleteStatus"/>
+        <association property="user" column="userID" javaType="com.imcode.rls.user.model.Loginregister"
+                     select="getLoginregister"/>
+    </resultMap>
+    <select id="getLoginregister" resultType="com.imcode.rls.user.model.Loginregister">
+        select * from loginregister where userID = #{user};
+    </select>
+    <update id="updateRoomSource" parameterType="map">
+        update roomsource set roomAddress = #{roomAddress},roomArea = #{roomArea}, roomPrice = #{roomPrice}, roomStatus = #{roomStatus}, roomLatelyTime = now()   where roomNO = #{roomNO};
+    </update>
+    <delete id="deleteRoomSource" parameterType="String">
+        delete from roomsource where roomNO = #{rooNO}
+    </delete>
+
+    <select id="getRoomSource" resultType="com.imcode.rls.roomsource.model.RoomSource">
+        select * from roomsource where roomNO = #{roomNO}
+    </select>
+</mapper>
