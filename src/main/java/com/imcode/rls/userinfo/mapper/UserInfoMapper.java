@@ -4,5 +4,4 @@ import java.util.Map;
 
 public interface UserInfoMapper {
     boolean addUserInfo(Map<String ,String> map);
-
 }
