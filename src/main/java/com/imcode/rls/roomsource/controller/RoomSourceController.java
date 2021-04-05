@@ -26,6 +26,11 @@ public class RoomSourceController {
         return json;
     }
 
+    @GetMapping("/getRoomSourceAll")
+    public R getRoomSourceAll() {
+        return getRoomList();
+    }
+
     @PostMapping("/RoomSource/edit")
     public R editRoomSource(@RequestBody Map<String, String> data) {
         R json;
