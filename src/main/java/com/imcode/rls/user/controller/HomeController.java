@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @RestController
@@ -19,8 +20,9 @@ public class HomeController {
     private IUserJurisdictionMenuService userJurisdictionMenuServiceImpl;
 
     @GetMapping("/getSideMenuScope")
-    public R getSideMenuScope(String userType) {
+    public R getSideMenuScope(String userType) throws UnsupportedEncodingException {
         R json = R.ok();
+        userType = new String(userType.getBytes("ISO8859-1"), "utf-8");
         System.out.println(userType);
         List<Userjurisdictionmenu> menu = userJurisdictionMenuServiceImpl.getUserJurisdictionMenu(userType);
         json.put("data",menu);

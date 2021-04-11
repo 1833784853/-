@@ -42,6 +42,8 @@ public class NewsController {
         return json;
     }
 
+
+
     @PostMapping("/getNewsImgUrl")
     public R uploadNewsImg(@RequestParam("file") final MultipartFile file) {
         R json;
