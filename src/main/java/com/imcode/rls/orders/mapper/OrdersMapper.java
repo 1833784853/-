@@ -26,4 +26,8 @@ public interface OrdersMapper {
     Integer getCountNewsNumber();
 
     boolean deleteNews(Integer roomNewID);
+
+    boolean updateNewsCount(Map<String,Object> map);
+
+    List<RoomNews> getAll();
 }

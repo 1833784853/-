@@ -19,6 +19,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class NewsServiceImpl implements NewsService {
@@ -36,9 +37,9 @@ public class NewsServiceImpl implements NewsService {
     private LoginregisterMapper loginregisterMapper;
 
     public List<RoomNews> getRoomNews(final Integer CurrentPage, final Integer pageSize) {
-        List<RoomNews> roomNews = ordersMapper.getRoomNews(new HashMap<String, Integer>(){{
-            put("start",CurrentPage*pageSize);
-            put("end",pageSize);
+        List<RoomNews> roomNews = ordersMapper.getRoomNews(new HashMap<String, Integer>() {{
+            put("start", CurrentPage * pageSize);
+            put("end", pageSize);
         }});
         for (RoomNews roomNew : roomNews) {
             String newHTML = roomNew.getNewHTML();
@@ -289,7 +290,6 @@ public class NewsServiceImpl implements NewsService {
                     newHTML = resultHTML.toString();
                     resultHTML.delete(0, resultHTML.length());
                 }
-
                 int indexOf = newHTML.indexOf("<img");
                 String imgUrl = "";
                 if (indexOf != -1) {
@@ -318,12 +318,12 @@ public class NewsServiceImpl implements NewsService {
         RoomNews roomNews = this.getRoomNews(roomNewID);
         String newHTML = roomNews.getNewHTML();
         int index = 0;
-        while ((index = newHTML.indexOf("<img",index+1))!=-1) {
-            index = newHTML.indexOf("upload",index);
+        while ((index = newHTML.indexOf("<img", index + 1)) != -1) {
+            index = newHTML.indexOf("upload", index);
             if (index == -1) break;
             int start = newHTML.indexOf("/", index + 1);
             int end = newHTML.indexOf("\"", start + 2);
-            fileService.deleteFile(newHTML.substring(start,end));
+            fileService.deleteFile(newHTML.substring(start, end));
         }
         boolean isDel = ordersMapper.deleteNews(roomNewID);
         if (isDel) {
@@ -332,4 +332,23 @@ public class NewsServiceImpl implements NewsService {
             return R.error("删除失败");
         }
     }
+
+    public R updateNewsCount(Map<String, Object> map) {
+        Integer roomNewID = (Integer) map.get("roomNewID");
+        System.out.println("---" + roomNewID);
+        RoomNews news = ordersMapper.getNews(roomNewID);
+        map.put("count", news.getNewSeeCount() + 1);
+
+        if (ordersMapper.updateNewsCount(map)) {
+            return R.ok("请求成功");
+        } else {
+            return R.error("请求失败");
+        }
+
+    }
+
+    public R getAll() {
+        return R.ok("请求成功").put("data",ordersMapper.getAll());
+    }
+
 }

@@ -247,8 +247,7 @@ public class LoginController {
         String repassword = data.get("repassword");
         String code = data.get("code");
         String openid = data.get("openid");
-
         return userLoginServiceImpl.wxRegisterAndBind(phone, password, repassword, code, openid, session);
-
     }
+
 }
