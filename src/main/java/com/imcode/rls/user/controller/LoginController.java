@@ -250,4 +250,8 @@ public class LoginController {
         return userLoginServiceImpl.wxRegisterAndBind(phone, password, repassword, code, openid, session);
     }
 
+    @PostMapping("/registerUserInfo")
+    public R registerUserInfo(@RequestBody Map<String,Object> data) {
+        return userLoginServiceImpl.registerUserInfo(data);
+    }
 }

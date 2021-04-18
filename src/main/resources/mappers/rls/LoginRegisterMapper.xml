@@ -47,4 +47,12 @@
     <update id="updateBindWxOpenid" parameterType="map">
         update loginregister set wxOpenid = #{openid} where userID = #{userid};
     </update>
+    
+    <insert id="registerUserInfo" parameterType="map">
+        insert into userinfo (userID,userMail,userCard) values (#{userID},#{useremail},#{card});
+    </insert>
+
+    <update id="updateStatus" parameterType="string">
+        update loginregister set userType = #{status} where userID = #{userID};
+    </update>
 </mapper>

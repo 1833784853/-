@@ -5,6 +5,7 @@ import com.imcode.rls.user.model.Loginregister;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 public interface IUserLoginService {
     List<Loginregister> getUser();
@@ -18,4 +19,6 @@ public interface IUserLoginService {
     Loginregister getLoginregisterByPhoneAndPwd(String username,String password);
 
     R wxRegisterAndBind(String phone,String password,String repassword,String code,String openid,HttpSession session);
+
+    R registerUserInfo(Map<String, Object> data);
 }
