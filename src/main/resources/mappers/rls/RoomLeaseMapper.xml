@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imcode.rls.roomlease.mapper.RoomLeaseListMapper">
+
+<!--    查询全部-->
+    <select id="getRoomLeaseList" resultMap="roomleaselist">
+        select * from roomleaselist;
+    </select>
+
+    <!-- 根据roomNO查询 -->
+    <select id="getRoomLeaseListByRoomNO" resultMap="roomleaselist">
+        select * from roomleaselist where roomNO = #{roomNO};
+    </select>
+
+    <resultMap id="roomleaselist" type="com.imcode.rls.roomlease.model.RoomLeaseList">
+        <result property="roomListID" column="roomListID"/>
+        <result property="contractNO" column="contractNO"/>
+        <result property="contractURL" column="contractURL"/>
+        <result property="contractUser" column="contractUser"/>
+        <result property="status" column="status"/>
+        <association property="userID" column="userID" javaType="com.imcode.rls.userinfo.model.UserInfo"
+                     select="getUserInfo"/>
+        <association property="roomNO" column="roomNO" javaType="com.imcode.rls.roomsource.model.RoomSource"
+                     select="getRoomSourceList"/>
+    </resultMap>
+
+    <select id="getUserInfo" resultType="com.imcode.rls.userinfo.model.UserInfo">
+        select * from UserInfo where userID = #{userID};
+    </select>
+
+    <select id="getRoomSourceList" resultType="com.imcode.rls.roomsource.model.RoomSource">
+        select * from roomsource where roomNO = #{roomNO}
+    </select>
+
+<!-- 管理员查询所有的已退租列表  -->
+    <select id="getAllRoomLeaseByWithout" resultMap="roomleaselist">
+        select * from roomleaselist where status = "已退租";
+    </select>
+<!-- 管理员查询所有的在租列表  -->
+    <select id="getAllRoomLeaseByRent" resultMap="roomleaselist">
+        select * from roomleaselist where status = "在租";
+    </select>
+<!-- 租客查询自己已退租列表 -->
+    <select id="getRoomLeaseByWithout" resultMap="roomleaselist" parameterType="string">
+        select * from roomleaselist where status = "已退租" and userID = #{userID};
+    </select>
+
+<!-- 租客查询自己在租列表 -->
+<select id="getRoomLeaseByRent" resultMap="roomleaselist" parameterType="string">
+    select * from roomleaselist where status = "在租" and userID = #{userID};
+</select>
+
+
+<!-- 删除 -->
+    <delete id="deleteRoomLeaseList" parameterType="int">
+        delete from roomleaselist where roomListID = #{roomListID}
+    </delete>
+    
+<!-- 查看合同 -->
+    <select id="getContractURL" parameterType="int" resultType="com.imcode.rls.roomlease.model.RoomLeaseList">
+        select contractURL from roomleaselist where roomListID = #{roomListID};
+    </select>
+    
+<!-- 终止合同之后的修改 -->
+    <update id="updateRoomLeaseList" parameterType="map">
+        update roomleaselist set status= "已退租" where roomListID = #{roomListID}
+    </update>
+
+<!--  新增  -->
+    <insert id="addcontractURL" parameterType="map">
+        insert into roomleaselist(roomListID,roomNO,userID,contractNO,contractURL,contractUser,status)
+        values (null ,#{roomNO},#{userID},#{contractNO},#{contractURL},#{contractUser},"已出租")
+    </insert>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+

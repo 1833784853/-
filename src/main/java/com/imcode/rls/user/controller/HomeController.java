@@ -22,7 +22,6 @@ public class HomeController {
     @GetMapping("/getSideMenuScope")
     public R getSideMenuScope(String userType) throws UnsupportedEncodingException {
         R json = R.ok();
-        userType = new String(userType.getBytes("ISO8859-1"), "utf-8");
         System.out.println(userType);
         List<Userjurisdictionmenu> menu = userJurisdictionMenuServiceImpl.getUserJurisdictionMenu(userType);
         json.put("data",menu);
