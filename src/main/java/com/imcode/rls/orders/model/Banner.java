@@ -14,4 +14,6 @@ public class Banner {
   private String bannerTitle;
   private String bannerContent;
 
+
+
 }

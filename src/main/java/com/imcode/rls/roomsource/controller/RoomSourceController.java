@@ -17,6 +17,7 @@ public class RoomSourceController {
     @Autowired
     private IRoomSourceService roomSourceServiceImpl;
 
+    //列表
     @GetMapping("/getRoomList")
     public R getRoomList() {
         R json = R.ok();
@@ -25,11 +26,27 @@ public class RoomSourceController {
         json.put("data", roomSourceList);
         return json;
     }
+    //新增
+    @PostMapping("/RoomSource/inset")
+    public R insertRoomSource(@RequestBody Map<String, String> data){
+        R json;
+        System.out.println(data);
+        boolean isOK = roomSourceServiceImpl.insertRoomSource(data);
+        if (isOK){
+            json = R.ok();
+            json.put("msg", "添加成功！！!");
+        }else {
+            json = R.error("添加失败！！！");
+        }
+        return json;
+    }
 
     @PostMapping("/RoomSource/edit")
     public R editRoomSource(@RequestBody Map<String, String> data) {
         R json;
         boolean isOK = roomSourceServiceImpl.updateRoomSource(data);
+        System.out.println(isOK);
+
         if (isOK) {
             // 更新成功
             json = R.ok();

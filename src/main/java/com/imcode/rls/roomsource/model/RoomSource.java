@@ -25,4 +25,84 @@ public class RoomSource {
     private String roomLatelyTime; // 最后一次操作更新的时间
     private int roomDeleteStatus; // 房源是否上线，默认上线（1）
     private Loginregister user; // 用户信息
+
+    public int getRoomID() {
+        return roomID;
+    }
+
+    public void setRoomID(int roomID) {
+        this.roomID = roomID;
+    }
+
+    public String getRoomNO() {
+        return roomNO;
+    }
+
+    public void setRoomNO(String roomNO) {
+        this.roomNO = roomNO;
+    }
+
+    public String getRoomAddress() {
+        return roomAddress;
+    }
+
+    public void setRoomAddress(String roomAddress) {
+        this.roomAddress = roomAddress;
+    }
+
+    public double getRoomArea() {
+        return roomArea;
+    }
+
+    public void setRoomArea(double roomArea) {
+        this.roomArea = roomArea;
+    }
+
+    public double getRoomPrice() {
+        return roomPrice;
+    }
+
+    public void setRoomPrice(double roomPrice) {
+        this.roomPrice = roomPrice;
+    }
+
+    public String getRoomStatus() {
+        return roomStatus;
+    }
+
+    public void setRoomStatus(String roomStatus) {
+        this.roomStatus = roomStatus;
+    }
+
+    public String getRoomTime() {
+        return roomTime;
+    }
+
+    public void setRoomTime(String roomTime) {
+        this.roomTime = roomTime;
+    }
+
+    public String getRoomLatelyTime() {
+        return roomLatelyTime;
+    }
+
+    public void setRoomLatelyTime(String roomLatelyTime) {
+        this.roomLatelyTime = roomLatelyTime;
+    }
+
+    public int getRoomDeleteStatus() {
+        return roomDeleteStatus;
+    }
+
+    public void setRoomDeleteStatus(int roomDeleteStatus) {
+        this.roomDeleteStatus = roomDeleteStatus;
+    }
+
+    public Loginregister getUser() {
+        return user;
+    }
+
+    public void setUser(Loginregister user) {
+        this.user = user;
+    }
 }
