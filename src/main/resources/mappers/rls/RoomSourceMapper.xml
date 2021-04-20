@@ -25,12 +25,17 @@
         update roomsource set roomAddress = #{roomAddress},roomArea = #{roomArea}, roomPrice = #{roomPrice}, roomStatus = #{roomStatus}, roomLatelyTime = now()   where roomNO = #{roomNO};
     </update>
     <delete id="deleteRoomSource" parameterType="String">
-        delete from roomsource where roomNO = #{roomNO}
+        delete from roomsource where roomNO = #{rooNO}
     </delete>
 
     <select id="getRoomSource" resultType="com.imcode.rls.roomsource.model.RoomSource">
         select * from roomsource where roomNO = #{roomNO}
     </select>
+
+    <insert id="addRoomSource" parameterType="map">
+        insert into roomsource (roomNO,roomAddress,roomArea,roomPrice,roomStatus,roomTime,roomLatelyTime,userID)
+        values (#{roomNO},#{roomAddress},#{roomArea},#{roomPrice},#{roomStatus},now(),now(),#{userID});
+    </insert>
 
     <insert id="insertRoomSource" parameterType="map">
         insert into roomsource(roomID, roomNO, roomAddress, roomArea, roomPrice, roomStatus, roomTime, roomLatelyTime, userID)

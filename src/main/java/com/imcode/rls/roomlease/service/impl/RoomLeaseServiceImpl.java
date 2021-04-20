@@ -21,6 +21,11 @@ public class RoomLeaseServiceImpl implements IRoomLeaseService {
 
     private FileService fileService;
 
+    //根据roomNO查询
+    public List<RoomLeaseList> getRoomLeaseListByRoomNO(String roomNO){
+        return roomLeaseListMapper.getRoomLeaseListByRoomNO(roomNO);
+    }
+
     public List<RoomLeaseList> getRoomLeaseList() {
 
         return roomLeaseListMapper.getRoomLeaseList();
@@ -33,6 +38,7 @@ public class RoomLeaseServiceImpl implements IRoomLeaseService {
     }
 
     //租客删除已退租列表
+    //删除
     public boolean deleteRoomLeaseList(int roomListID) {
         return roomLeaseListMapper.deleteRoomLeaseList(roomListID);
     }
@@ -53,12 +59,18 @@ public class RoomLeaseServiceImpl implements IRoomLeaseService {
 
     //租客查询自己已退租列表
     public List<RoomLeaseList> getRoomLeaseByWithout (String userID){
+//        if (status == null || status.equals("")){
+//            return null;
+//        }
         System.out.println(userID);
         return roomLeaseListMapper.getRoomLeaseByWithout(userID);
     }
 
     //租客查询自己在租列表
     public List<RoomLeaseList> getRoomLeaseByRent (String userID){
+//        if (status == null || status.equals("")){
+//            return null;
+//        }
         System.out.println(userID);
         return roomLeaseListMapper.getRoomLeaseByRent(userID);
     }

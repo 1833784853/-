@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imcode.rls.roomapply.mapper.ApplyMapper">
+    <resultMap id="roomapplylist" type="com.imcode.rls.roomapply.model.Apply">
+        <result property="applyID" column="applyID"/>
+        <result property="applyStatus" column="applyStatus"/>
+        <association property="userID" column="userID" javaType="com.imcode.rls.userinfo.model.UserInfo"
+                     select="getUserInfo"/>
+        <association property="roomNO" column="roomNO" javaType="com.imcode.rls.roomsource.model.RoomSource"
+                     select="getRoomSource"/>
+    </resultMap>
+    <select id="selectAll" resultMap="roomapplylist">
+       select * from  roomapply;
+    </select>
+    <select id="selectApplylist" resultMap="roomapplylist" parameterType="map">
+       select * from  roomapply;
+    </select>
+    <select id="getUserInfo" resultMap="getLogin">
+        select * from userInfo where userID = #{userID};
+    </select>
+    <resultMap id="getLogin" type="com.imcode.rls.userinfo.model.UserInfo">
+        <association property="userID" column="userID" javaType="com.imcode.rls.user.model.Loginregister" select="getLoginUser" />
+    </resultMap>
+    <select id="getLoginUser" resultType="com.imcode.rls.user.model.Loginregister">
+        select * from loginregister where userID = #{userID};
+    </select>
+    <select id="getRoomSource" resultType="com.imcode.rls.roomsource.model.RoomSource">
+        select * from roomsource where roomNO = #{roomNO};
+    </select>
+
+    <select id="selectid" resultMap="roomapplylist" parameterType="int">
+       select * from roomapply where applyStatus=#{applyStatus};
+   </select>
+    <select id="selectidTenant" resultMap="roomapplylist" parameterType="map">
+       select * from roomapply where userID=#{userID} limit #{currentPage},#{pageSize};
+   </select>
+    <update id="update" parameterType="map">
+        update roomapply set applyStatus=#{applyStatus} where applyID=#{applyID};
+    </update>
+    <insert id="add" parameterType="map">
+        insert into roomapply(applyID,userID,roomNO) values(null,#{userID},#{roomNO});
+    </insert>
+    <delete id="delete" parameterType="int">
+        delete from roomapply where applyID=#{applyID};
+    </delete>
+    <select id="selectByIdNo" resultMap="roomapplylist" parameterType="map">
+        select * from roomapply where userID=#{userID} and roomNO=#{roomNO} and applyStatus=0;
+    </select>
+
+    <delete id="deleteList" parameterType="list">
+        delete from roomapply where applyID in
+        <foreach collection="list" item="applyID" open="(" separator="," close=")">
+            #{applyID}
+        </foreach>
+    </delete>
+
+    <update id="updateAgreeList" parameterType="list">
+        update roomapply set applyStatus=1 where applyID in
+        <foreach collection="list" item="applyID" open="(" separator="," close=")">
+            #{applyID}
+        </foreach>
+    </update>
+
+    <update id="updateRefuseList" parameterType="list">
+        update roomapply set applyStatus=2 where applyID in
+        <foreach collection="list" item="applyID" open="(" separator="," close=")">
+            #{applyID}
+        </foreach>
+    </update>
+
+</mapper>

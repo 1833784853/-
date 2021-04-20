@@ -9,29 +9,25 @@
         select * from roomleaselist;
     </select>
 
+    <!-- 根据roomNO查询 -->
+    <select id="getRoomLeaseListByRoomNO" resultMap="roomleaselist">
+        select * from roomleaselist where roomNO = #{roomNO};
+    </select>
+
     <resultMap id="roomleaselist" type="com.imcode.rls.roomlease.model.RoomLeaseList">
         <result property="roomListID" column="roomListID"/>
         <result property="contractNO" column="contractNO"/>
         <result property="contractURL" column="contractURL"/>
         <result property="contractUser" column="contractUser"/>
         <result property="status" column="status"/>
-        <association property="userID" column="userID" javaType="com.imcode.rls.user.model.Loginregister"
-                     select="getLoginregister">
-        </association>
+        <association property="userID" column="userID" javaType="com.imcode.rls.userinfo.model.UserInfo"
+                     select="getUserInfo"/>
         <association property="roomNO" column="roomNO" javaType="com.imcode.rls.roomsource.model.RoomSource"
-                     select="getRoomSourceList">
-        </association>
-        <association property="applyID" column="applyID" javaType="com.imcode.rls.roomapply.model.Apply"
-                     select="selectApplylist"   >
-        </association>
+                     select="getRoomSourceList"/>
     </resultMap>
 
-    <select id="selectApplylist" resultType="com.imcode.rls.roomapply.model.Apply">
-        select * from  roomapply where applyID = #{applyID};
-    </select>
-
-    <select id="getLoginregister" resultType="com.imcode.rls.user.model.Loginregister">
-        select * from loginregister where userID = #{userID};
+    <select id="getUserInfo" resultType="com.imcode.rls.userinfo.model.UserInfo">
+        select * from UserInfo where userID = #{userID};
     </select>
 
     <select id="getRoomSourceList" resultType="com.imcode.rls.roomsource.model.RoomSource">
@@ -52,6 +48,21 @@
     <select id="getAllRoomLeaseByWithout" resultMap="roomleaselist">
         select * from roomleaselist where status = "已退租";
     </select>
+<!-- 管理员查询所有的在租列表  -->
+    <select id="getAllRoomLeaseByRent" resultMap="roomleaselist">
+        select * from roomleaselist where status = "在租";
+    </select>
+<!-- 租客查询自己已退租列表 -->
+    <select id="getRoomLeaseByWithout" resultMap="roomleaselist" parameterType="string">
+        select * from roomleaselist where status = "已退租" and userID = #{userID};
+    </select>
+
+<!-- 租客查询自己在租列表 -->
+<select id="getRoomLeaseByRent" resultMap="roomleaselist" parameterType="string">
+    select * from roomleaselist where status = "在租" and userID = #{userID};
+</select>
+
+
 
 <!-- 管理员查询所有的空闲列表  -->
     <select id="getAllRoomLeaseByRent" resultType="com.imcode.rls.roomapply.model.Apply">

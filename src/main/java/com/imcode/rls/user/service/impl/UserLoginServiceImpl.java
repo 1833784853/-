@@ -15,10 +15,7 @@ import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserLoginServiceImpl implements IUserLoginService {
@@ -187,7 +184,7 @@ public class UserLoginServiceImpl implements IUserLoginService {
                     Loginregister user = loginRegisterMapper.getLoginregisterByID(loginregister.getUserId());
                     ObjectMapper jsonParse = new ObjectMapper();
                     String jwt = JwtUtils.createJWT(user.getUserId(), jsonParse.writeValueAsString(user), JwtUtils.TTLMILLIS);// 签发令牌
-                    return R.ok("注册绑定成功").put("token",jwt);
+                    return R.ok("注册绑定成功").put("token", jwt);
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
                     return R.ok("注册绑定成功，将跳转到登录页面");
@@ -198,5 +195,21 @@ public class UserLoginServiceImpl implements IUserLoginService {
         } else {
             return R.error("注册绑定失败");
         }
+    }
+
+    public R registerUserInfo(Map<String, Object> data) {
+        if (loginRegisterMapper.registerUserInfo(data)) {
+            data.put("status", "认证用户");
+            if (loginRegisterMapper.updateStatus(data)) {
+                Loginregister user = loginRegisterMapper.getLoginregisterByID((String) data.get("userID"));
+                ObjectMapper jsonParse = new ObjectMapper();
+                try {
+                    return R.ok().put("token", JwtUtils.createJWT(user.getUserId(), jsonParse.writeValueAsString(user), JwtUtils.TTLMILLIS));
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return R.error("认证失败");
     }
 }

@@ -13,6 +13,8 @@ public interface RoomSourceMapper {
     boolean updateRoomSource(Map<String,String> roomSource);
     boolean deleteRoomSource(String roomNO);
 
+    boolean addRoomSource(Map<String, String> map);
+
 
     boolean insertRoomSource(Map<String, String> data);
 }

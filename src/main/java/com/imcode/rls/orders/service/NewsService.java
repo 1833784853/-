@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface NewsService {
     /**
@@ -39,4 +40,11 @@ public interface NewsService {
     Integer getCountNewsNumber();
 
     R deleteNews(Integer roomNewID);
+
+    R updateNewsCount(Map<String, Object> map);
+
+    R getAll();
+
+
+
 }

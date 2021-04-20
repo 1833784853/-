@@ -1,6 +1,7 @@
 package com.imcode.rls.roomsource.service;
 
 import com.imcode.rls.roomlease.model.RoomLeaseList;
+import com.imcode.common.model.R;
 import com.imcode.rls.roomsource.model.RoomSource;
 
 import java.util.List;
@@ -12,4 +13,8 @@ public interface IRoomSourceService {
     boolean deleteRoomSource(String roomNO);
     boolean insertRoomSource(Map<String,String> roomSource);
 
+
+    R getRoomSourceAll();
+
+    R addRoomSource(Map<String, String> map);
 }

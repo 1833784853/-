@@ -71,4 +71,11 @@
         delete from roomnews where roomNewID = #{roomNewID}
     </delete>
 
+    <update id="updateNewsCount" parameterType="map">
+        update roomnews set newSeeCount = #{count} where roomNewID = #{roomNewID};
+    </update>
+    
+    <select id="getAll" resultMap="roomNews">
+        select * from roomnews order by newTime;
+    </select>
 </mapper>

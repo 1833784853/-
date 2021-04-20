@@ -41,6 +41,11 @@ public class RoomSourceController {
         return json;
     }
 
+    @GetMapping("/getRoomSourceAll")
+    public R getRoomSourceAll() {
+        return roomSourceServiceImpl.getRoomSourceAll();
+    }
+
     @PostMapping("/RoomSource/edit")
     public R editRoomSource(@RequestBody Map<String, String> data) {
         R json;
@@ -68,6 +73,11 @@ public class RoomSourceController {
             json = R.error("删除失败");
         }
         return json;
+    }
+
+    @PostMapping("/RoomSource/add")
+    public R addRoomSource(@RequestBody Map<String,String> map) {
+        return roomSourceServiceImpl.addRoomSource(map);
     }
 
 }

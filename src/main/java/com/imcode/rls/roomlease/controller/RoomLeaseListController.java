@@ -50,6 +50,14 @@ public class RoomLeaseListController {
         }});
         json.put("msg", "请求成功");
         json.put("data", roomLeaseList);
+    //根据roomNO查询
+    @PostMapping("/getRoomLeaseListByRoomNO")
+    public R getRoomLeaseListByRoomNO(@RequestBody Map<String,String> data){
+        R json = R.ok();
+        String roomNO = data.get("roomNO");
+        List<RoomLeaseList> RoomLeaseListByRoomNO = roomLeaseService.getRoomLeaseListByRoomNO(roomNO);
+        json.put("msg", "请求成功");
+        json.put("data", RoomLeaseListByRoomNO);
         return json;
     }
 
@@ -64,6 +72,7 @@ public class RoomLeaseListController {
     }
 
     //    管理员查询所有的空闲列表
+    //    管理员查询所有的在租列表
     @PostMapping("/getAllRoomLeaseByRent")
     public R getAllRoomLeaseByRent(){
         R json = R.ok();
@@ -120,6 +129,21 @@ public class RoomLeaseListController {
         return json;
     }
 
+//    @PostMapping("/RoomLeaseList/add")
+//    public String insertRoomSource(RoomLeaseList roomLeaseList, @RequestParam("multipartFile")MultipartFile multipartFile){
+//        try {
+//            fileService.upload(multipartFile);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
+//
+
+
+
+
+
 //    //新增
    @PostMapping("/RoomLeaseList/add")
     public R insertRoomSource(Map<String, String> data, MultipartFile uploadFile) throws IOException {
@@ -143,6 +167,7 @@ public class RoomLeaseListController {
     return json;
 }
     //租客删除已退租列表
+    //删除
     @PostMapping("/RoomLeaseList/delete")
     public R deleteRoomLeaseList(@RequestBody Map<String, Integer> map) {
         R json;
@@ -156,3 +181,6 @@ public class RoomLeaseListController {
     }
 
 }
+}
+
+

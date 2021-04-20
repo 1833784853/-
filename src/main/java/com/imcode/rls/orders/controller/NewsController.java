@@ -42,6 +42,8 @@ public class NewsController {
         return json;
     }
 
+
+
     @PostMapping("/getNewsImgUrl")
     public R uploadNewsImg(@RequestParam("file") final MultipartFile file) {
         R json;
@@ -129,6 +131,7 @@ public class NewsController {
      */
     @GetMapping("/getNews")
     public R getNews(@RequestParam("roomNewID") Integer roomNewID) {
+        System.out.println(roomNewID);
         if (roomNewID != null) {
             RoomNews roomNews = newsServiceImpl.getRoomNews(roomNewID);
             if (roomNews != null) {
@@ -216,5 +219,15 @@ public class NewsController {
     public R deleteNews(@RequestBody Map<String, Integer> map) {
         if (map == null) return R.error("缺少必要参数");
         return newsServiceImpl.deleteNews(map.get("roomNewID"));
+    }
+
+    @PostMapping("/updateNewsCount")
+    public R updateNewsCount(@RequestBody Map<String,Object> map) {
+        return newsServiceImpl.updateNewsCount(map);
+    }
+
+    @GetMapping("/getAll")
+    public R getAll() {
+        return newsServiceImpl.getAll();
     }
 }

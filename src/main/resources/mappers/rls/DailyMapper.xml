@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imcode.rls.daily.mapper.DailyMapper">
+    <resultMap id="getdailylist" type="com.imcode.rls.daily.model.Daily">
+        <result property="dailyID" column="dailyID"/>
+        <result property="dailyTitle" column="dailyTitle"/>
+        <result property="dailyContent" column="dailyContent"/>
+        <result property="dailyTime" column="dailyTime"/>
+        <association property="userID" column="userID" javaType="com.imcode.rls.user.model.Loginregister"
+                     select="getLoginregister"/>
+    </resultMap>
+   <select id="selectAll" resultMap="getdailylist">
+       select * from daily;
+   </select>
+    <select id="getLoginregister" resultType="com.imcode.rls.user.model.Loginregister">
+        select * from loginregister where userID = #{userID};
+    </select>
+    <select id="selectid" parameterType="string" resultMap="getdailylist">
+        select * from daily where userID=#{userID};
+    </select>
+    <update id="update" parameterType="map">
+        update daily set dailyTitle=#{dailyTitle}, dailyContent=#{dailyContent}
+             where dailyID=#{dailyID};
+    </update>
+    <delete id="delete" parameterType="int">
+        delete from daily where dailyID=#{dailyID};
+    </delete>
+    <insert id="add" parameterType="map">
+        insert into daily(userID,dailyTitle,dailyContent,dailyTime) value(#{userID},#{dailyTitle},#{dailyContent},now())
+    </insert>
+</mapper>

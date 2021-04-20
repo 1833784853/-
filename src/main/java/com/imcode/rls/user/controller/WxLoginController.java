@@ -9,6 +9,7 @@ import com.imcode.rls.user.model.WxToken;
 import com.imcode.rls.user.model.WxUser;
 import com.imcode.rls.user.service.IWxLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,13 +23,17 @@ public class WxLoginController {
     @Autowired
     private IWxLoginService wxLoginServiceImpl;
 
+    private String wxId = "wx7287a60bb700fd21&secret=1ef8755f92bebae8ad7bab432ba29cbf&code=";
+
     @RequestMapping("/wxLogin")
     public String wxLogin(HttpServletRequest request, ModelAndView modelAndView) {
         String code = request.getParameter("code");
         if (code == null) return "redirect:/#/login/common";
         else {
+            System.out.println(wxId);
             String tokenUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?" +
-                    "appid=wx7287a60bb700fd21&secret=1ef8755f92bebae8ad7bab432ba29cbf&code=" + code + "&grant_type=authorization_code";
+                    "appid=" + wxId + "" + code + "&grant_type=authorization_code";
+            System.out.println(tokenUrl);
             try {
                 HttpClient httpClient = new HttpClient(tokenUrl);
 
@@ -55,11 +60,11 @@ public class WxLoginController {
 
                 if (user == null) {
                     // 未绑定该信息
-                    return "redirect:/#/login/WxRegister/"+openid;
+                    return "redirect:/#/login/WxRegister/" + openid;
                 } else {
                     ObjectMapper jsonParse = new ObjectMapper();
                     String jwt = JwtUtils.createJWT(user.getUserId(), jsonParse.writeValueAsString(user), JwtUtils.TTLMILLIS);// 签发令牌
-                    return "redirect:/#/home/"+jwt;
+                    return "redirect:/#/home/" + jwt;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
