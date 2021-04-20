@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class UserInfo {
     private Integer id;
     private Loginregister userID;
+    private String userName;
     private String userMail;
     private String userCard;
 }

@@ -49,7 +49,7 @@
     </update>
     
     <insert id="registerUserInfo" parameterType="map">
-        insert into userinfo (userID,userMail,userCard) values (#{userID},#{useremail},#{card});
+        insert into userinfo (userID,userName,userMail,userCard) values (#{userID},#{username},#{useremail},#{card});
     </insert>
 
     <update id="updateStatus" parameterType="string">
