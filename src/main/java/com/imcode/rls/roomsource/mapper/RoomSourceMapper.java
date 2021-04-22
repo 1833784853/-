@@ -14,4 +14,6 @@ public interface RoomSourceMapper {
     boolean deleteRoomSource(String roomNO);
 
     boolean addRoomSource(Map<String, String> map);
+
+    List<RoomSource> getRoomSourceByRoomNO(String roomNO);
 }

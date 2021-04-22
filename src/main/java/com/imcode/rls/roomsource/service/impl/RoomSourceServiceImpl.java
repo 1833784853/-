@@ -70,4 +70,8 @@ public class RoomSourceServiceImpl implements IRoomSourceService {
         }
         return json;
     }
+
+    public R getRoomSourceByRoomNO(String roomNO) {
+        return R.ok().put("data",roomSourceMapper.getRoomSourceByRoomNO(roomNO));
+    }
 }

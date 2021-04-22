@@ -36,4 +36,8 @@
         insert into roomsource (roomNO,roomAddress,roomArea,roomPrice,roomStatus,roomTime,roomLatelyTime,userID)
         values (#{roomNO},#{roomAddress},#{roomArea},#{roomPrice},#{roomStatus},now(),now(),#{userID});
     </insert>
+
+    <select id="getRoomSourceByRoomNO" parameterType="string" resultMap="roomsourcelist">
+        select * from roomsource where roomNO = #{roomNO}
+    </select>
 </mapper>

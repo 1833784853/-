@@ -14,4 +14,6 @@ public interface IRoomSourceService {
     R getRoomSourceAll();
 
     R addRoomSource(Map<String, String> map);
+
+    R getRoomSourceByRoomNO(String roomNO);
 }
