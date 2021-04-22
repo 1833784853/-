@@ -31,14 +31,13 @@
     <select id="getRoomSource" resultType="com.imcode.rls.roomsource.model.RoomSource">
         select * from roomsource where roomNO = #{roomNO}
     </select>
-
+    
     <insert id="addRoomSource" parameterType="map">
         insert into roomsource (roomNO,roomAddress,roomArea,roomPrice,roomStatus,roomTime,roomLatelyTime,userID)
         values (#{roomNO},#{roomAddress},#{roomArea},#{roomPrice},#{roomStatus},now(),now(),#{userID});
     </insert>
 
-    <insert id="insertRoomSource" parameterType="map">
-        insert into roomsource(roomID, roomNO, roomAddress, roomArea, roomPrice, roomStatus, roomTime, roomLatelyTime, userID)
-        values (null, #{roomNO}, #{roomAddress}, #{roomArea}, #{roomPrice}, #{roomStatus}, now(), now(), #{userID})
-    </insert>
+    <select id="getRoomSourceByRoomNO" parameterType="string" resultMap="roomsourcelist">
+        select * from roomsource where roomNO = #{roomNO}
+    </select>
 </mapper>

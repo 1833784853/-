@@ -15,6 +15,5 @@ public interface RoomSourceMapper {
 
     boolean addRoomSource(Map<String, String> map);
 
-
-    boolean insertRoomSource(Map<String, String> data);
+    List<RoomSource> getRoomSourceByRoomNO(String roomNO);
 }

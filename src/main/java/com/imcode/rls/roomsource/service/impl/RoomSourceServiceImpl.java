@@ -71,29 +71,7 @@ public class RoomSourceServiceImpl implements IRoomSourceService {
         return json;
     }
 
-    public boolean insertRoomSource(Map<String, String> data){
-        // 获取参数
-        String roomNO = data.get("roomNO");
-        String roomAddress = data.get("roomAddress");
-        String roomArea = data.get("roomArea");
-        String roomPrice = data.get("roomPrice");
-        String roomStatus = data.get("roomStatus");
-        String userID = data.get("userID");
-        // 校验
-        if (roomNO == null || roomNO.equals("") || roomAddress == null || roomAddress.equals("")
-                || roomArea == null || roomArea.equals("") || roomPrice == null || roomPrice.equals("")
-                || roomStatus == null || roomStatus.equals("")|| userID == null || userID.equals("")) {
-            return false;
-        }
-        // 校验面积是否是数字
-        if (!roomArea.matches("^\\d+.?\\d{0,2}$")) {
-            return false;
-        }
-        // 校验单价是否是数字
-        if (!roomPrice.matches("^\\d+.?\\d{0,2}$")) {
-            return false;
-        }
-
-        return roomSourceMapper.insertRoomSource(data);
+    public R getRoomSourceByRoomNO(String roomNO) {
+        return R.ok().put("data",roomSourceMapper.getRoomSourceByRoomNO(roomNO));
     }
 }

@@ -41,6 +41,11 @@ public class RoomSourceController {
         return json;
     }
 
+    @GetMapping("/getRoomSourceByRoomNO")
+    public R getRoomSourceByRoomNO(String roomNO) {
+        return roomSourceServiceImpl.getRoomSourceByRoomNO(roomNO);
+    }
+
     @GetMapping("/getRoomSourceAll")
     public R getRoomSourceAll() {
         return roomSourceServiceImpl.getRoomSourceAll();
