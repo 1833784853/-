@@ -26,20 +26,6 @@ public class RoomSourceController {
         json.put("data", roomSourceList);
         return json;
     }
-    //新增
-    @PostMapping("/RoomSource/inset")
-    public R insertRoomSource(@RequestBody Map<String, String> data){
-        R json;
-        System.out.println(data);
-        boolean isOK = roomSourceServiceImpl.insertRoomSource(data);
-        if (isOK){
-            json = R.ok();
-            json.put("msg", "添加成功！！!");
-        }else {
-            json = R.error("添加失败！！！");
-        }
-        return json;
-    }
 
     @GetMapping("/getRoomSourceByRoomNO")
     public R getRoomSourceByRoomNO(String roomNO) {

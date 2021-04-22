@@ -22,9 +22,6 @@ public interface RoomLeaseListMapper {
 //根据roomNO查询
     List<RoomLeaseList> getRoomLeaseListByRoomNO(String roomNO);
 
-    //    管理员查询所有的已退租列表
-    List<RoomLeaseList> getAllRoomLeaseByWithout();
-
     //    管理员查询所有的在租列表
     List<RoomLeaseList> getAllRoomLeaseByRent();
 
@@ -34,8 +31,14 @@ public interface RoomLeaseListMapper {
     //租客查询自己在租列表
     List<RoomLeaseList> getRoomLeaseByRent(String userID);
 
-    //已同意
+    //租客查询在租（已同意）列表
     List<RoomLeaseList> selectBystatu(HashMap<String, Object> map);
+
+    //..管理员查询在租（已同意）列表
+    List<RoomLeaseList> cselectBystatu(HashMap<String, Object> map);
+
+    //..管理员新增合同
+    boolean addContract(Map<String, String> map);
 
     //查看合同
     RoomLeaseList getContractURL(Integer roomListID);

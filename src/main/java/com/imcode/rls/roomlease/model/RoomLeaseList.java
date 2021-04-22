@@ -19,7 +19,7 @@ public class RoomLeaseList {
     private Loginregister userID;
     private Apply applyID;
     private String contractNO;
-    private String contractURL;
+    private String contractTime;
     private String contractUser;
     private String status;
 }

@@ -11,7 +11,6 @@ public interface IRoomSourceService {
     List<RoomSource> getRoomSourceList();
     boolean updateRoomSource(Map<String,String> roomSource);
     boolean deleteRoomSource(String roomNO);
-    boolean insertRoomSource(Map<String,String> roomSource);
 
 
     R getRoomSourceAll();

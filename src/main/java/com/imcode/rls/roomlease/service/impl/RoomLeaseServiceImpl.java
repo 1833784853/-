@@ -1,5 +1,6 @@
 package com.imcode.rls.roomlease.service.impl;
 
+import com.imcode.common.model.R;
 import com.imcode.common.service.FileService;
 import com.imcode.rls.roomlease.mapper.RoomLeaseListMapper;
 import com.imcode.rls.roomlease.model.RoomLeaseList;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,10 +50,33 @@ public class RoomLeaseServiceImpl implements IRoomLeaseService {
         return roomLeaseListMapper.getAllRoomLeaseByWithout();
     }
 
-    //已同意
+    //..租客查询在租（申请已同意）列表
     public List<RoomLeaseList> selectBystatu(HashMap<String, Object> map){
         return roomLeaseListMapper.selectBystatu(map);
     }
+
+    //..管理员查询在租（申请已同意）列表
+    public List<RoomLeaseList> cselectBystatu(HashMap<String, Object> map) {
+        map.put("currentPage",(Integer)map.get("currentPage")*(Integer)map.get("pageSize"));
+        return roomLeaseListMapper.cselectBystatu(map);
+    }
+
+    //..管理员新增合同
+    public R addContract(Map<String, String> map) {
+
+        R json = null;
+        Date date = new Date();
+        map.put("contractNO",date.getTime()+"");
+
+        if (roomLeaseListMapper.addContract(map)) {
+            json = R.ok("添加成功");
+        } else {
+            json = R.error("添加失败");
+        }
+        return json;
+    }
+
+
     //    管理员查询所有的在租列表
     public List<RoomLeaseList> getAllRoomLeaseByRent(){
         return roomLeaseListMapper.getAllRoomLeaseByRent();

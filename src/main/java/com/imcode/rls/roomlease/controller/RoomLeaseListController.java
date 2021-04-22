@@ -2,6 +2,7 @@ package com.imcode.rls.roomlease.controller;
 
 import com.imcode.common.model.R;
 import com.imcode.common.service.FileService;
+import com.imcode.rls.roomapply.service.ApplyService;
 import com.imcode.rls.roomlease.model.RoomLeaseList;
 import com.imcode.rls.roomlease.service.IRoomLeaseService;
 import org.springframework.beans.BeanUtils;
@@ -29,6 +30,9 @@ public class RoomLeaseListController {
 
     private RoomLeaseList roomLeaseList;
 
+    @Autowired
+    private ApplyService applyServiceimpl;
+
     //查询
     @PostMapping("/getRoomLeaseList")
     public R getRoomLeaseList(){
@@ -39,17 +43,33 @@ public class RoomLeaseListController {
         return json;
     }
 
-    //租客查询已同意（在租）列表
+    //..租客查询已同意（在租）列表
     @PostMapping("/selectBystatu")
-    public R selectBystatu(final String userID, final String currentPage, final String pageSize){
+    public R selectBystatu(@RequestBody HashMap<String, Object> map) {
         R json = R.ok();
-        List<RoomLeaseList> roomLeaseList = roomLeaseService.selectBystatu(new HashMap<String,Object>(){{
-            put("userID",userID);
-            put("currentPage",Integer.parseInt(currentPage)*Integer.parseInt(pageSize));
-            put("pageSize",Integer.parseInt(pageSize));
-        }});
+        List<RoomLeaseList> roomLeaseList = roomLeaseService.selectBystatu(map);
         json.put("msg", "请求成功");
         json.put("data", roomLeaseList);
+        return json;
+    }
+
+    //..管理员查询已同意（在租）列表
+    @PostMapping("/cselectBystatu")
+    public R cselectBystatu(@RequestBody HashMap<String, Object> map) {
+        R json = R.ok();
+        List<RoomLeaseList> roomLeaseList = roomLeaseService.cselectBystatu(map);
+        json.put("msg", "请求成功");
+        json.put("data", roomLeaseList).put("totalPage",applyServiceimpl.selectid(1).size());
+        return json;
+    }
+
+    //..管理员新增合同
+    @PostMapping("/addRoomLeaseList")
+    public R addContract(@RequestBody Map<String,String> map) {
+        return roomLeaseService.addContract(map);
+    }
+
+
     //根据roomNO查询
     @PostMapping("/getRoomLeaseListByRoomNO")
     public R getRoomLeaseListByRoomNO(@RequestBody Map<String,String> data){
@@ -139,11 +159,6 @@ public class RoomLeaseListController {
 //
 //    }
 //
-
-
-
-
-
 //    //新增
    @PostMapping("/RoomLeaseList/add")
     public R insertRoomSource(Map<String, String> data, MultipartFile uploadFile) throws IOException {
@@ -180,7 +195,6 @@ public class RoomLeaseListController {
         return json;
     }
 
-}
 }
 
 
