@@ -28,6 +28,43 @@ public class RoomLeaseServiceImpl implements IRoomLeaseService {
         return roomLeaseListMapper.getRoomLeaseListByRoomNO(roomNO);
     }
 
+    //..租客查询在租（申请已同意）列表
+    public List<RoomLeaseList> selectBystatu(HashMap<String, Object> map){
+        return roomLeaseListMapper.selectBystatu(map);
+    }
+
+    //..管理员查询在租（申请已同意）列表
+    public List<RoomLeaseList> cselectBystatu(HashMap<String, Object> map) {
+        map.put("currentPage",(Integer)map.get("currentPage")*(Integer)map.get("pageSize"));
+        return roomLeaseListMapper.cselectBystatu(map);
+    }
+
+    //..管理员新增合同
+    public R addContract(Map<String, String> map) {
+
+        R json = null;
+        Date date = new Date();
+        map.put("contractNO",date.getTime()+"");
+
+        if (roomLeaseListMapper.addContract(map)) {
+            roomLeaseListMapper.updateRoomBystatus(map);
+            roomLeaseListMapper.updateApplyBystatus(map);
+            json = R.ok("添加成功");
+        } else {
+            json = R.error("添加失败");
+        }
+        return json;
+    }
+
+    //..管理员查询所有的在租列表
+    public List<RoomLeaseList> getAllRoomLeaseByRent(HashMap<String, Object> map){
+        map.put("currentPage",(Integer)map.get("currentPage")*(Integer)map.get("pageSize"));
+        return roomLeaseListMapper.getAllRoomLeaseByRent(map);
+    }
+
+
+
+
     public List<RoomLeaseList> getRoomLeaseList() {
 
         return roomLeaseListMapper.getRoomLeaseList();
@@ -50,37 +87,10 @@ public class RoomLeaseServiceImpl implements IRoomLeaseService {
         return roomLeaseListMapper.getAllRoomLeaseByWithout();
     }
 
-    //..租客查询在租（申请已同意）列表
-    public List<RoomLeaseList> selectBystatu(HashMap<String, Object> map){
-        return roomLeaseListMapper.selectBystatu(map);
-    }
-
-    //..管理员查询在租（申请已同意）列表
-    public List<RoomLeaseList> cselectBystatu(HashMap<String, Object> map) {
-        map.put("currentPage",(Integer)map.get("currentPage")*(Integer)map.get("pageSize"));
-        return roomLeaseListMapper.cselectBystatu(map);
-    }
-
-    //..管理员新增合同
-    public R addContract(Map<String, String> map) {
-
-        R json = null;
-        Date date = new Date();
-        map.put("contractNO",date.getTime()+"");
-
-        if (roomLeaseListMapper.addContract(map)) {
-            json = R.ok("添加成功");
-        } else {
-            json = R.error("添加失败");
-        }
-        return json;
-    }
 
 
-    //    管理员查询所有的在租列表
-    public List<RoomLeaseList> getAllRoomLeaseByRent(){
-        return roomLeaseListMapper.getAllRoomLeaseByRent();
-    }
+
+
 
     //租客查询自己已退租列表
     public List<RoomLeaseList> getRoomLeaseByWithout (String userID){

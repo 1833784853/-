@@ -69,6 +69,16 @@ public class RoomLeaseListController {
         return roomLeaseService.addContract(map);
     }
 
+    // ..管理员查询所有的在租列表
+    @PostMapping("/getAllRoomLeaseByRent")
+    public R getAllRoomLeaseByRent(@RequestBody HashMap<String, Object> map){
+        R json = R.ok();
+        List<RoomLeaseList> selectByStatus = roomLeaseService.getAllRoomLeaseByRent(map);
+        json.put("msg", "请求成功");
+        json.put("data", selectByStatus).put("totalPage",applyServiceimpl.selectid(1).size());
+        return json;
+    }
+
 
     //根据roomNO查询
     @PostMapping("/getRoomLeaseListByRoomNO")
@@ -92,15 +102,7 @@ public class RoomLeaseListController {
     }
 
     //    管理员查询所有的空闲列表
-    //    管理员查询所有的在租列表
-    @PostMapping("/getAllRoomLeaseByRent")
-    public R getAllRoomLeaseByRent(){
-        R json = R.ok();
-        List<RoomLeaseList> selectByStatus = roomLeaseService.getAllRoomLeaseByRent();
-        json.put("msg", "请求成功");
-        json.put("data", selectByStatus);
-        return json;
-    }
+
 
 
     //租客查询自己已退租列表
