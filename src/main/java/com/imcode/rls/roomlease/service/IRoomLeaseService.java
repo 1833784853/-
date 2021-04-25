@@ -15,8 +15,11 @@ public interface IRoomLeaseService {
     List<RoomLeaseList> getRoomLeaseList();
 
 
-    //..租客查询在租（已同意）列表
-    List<RoomLeaseList> selectBystatu(HashMap<String, Object> map);
+    //..根据状态查询
+    List<RoomLeaseList> getSelectBystatu(String status);
+
+//    //..租客查询在租（已同意）列表
+//    List<RoomLeaseList> selectBystatu(HashMap<String, Object> map);
 
     //..管理员查询在租（已同意）列表
     List<RoomLeaseList> cselectBystatu(HashMap<String, Object> map);
@@ -24,38 +27,30 @@ public interface IRoomLeaseService {
     //..管理员新增合同
     R addContract(Map<String, String> map);
 
+
     //..管理员查询所有的在租列表
     List<RoomLeaseList> getAllRoomLeaseByRent(HashMap<String, Object> map);
 
+    // ..管理员终止合同
+    R updateRoomLeaseList(Map<String,Object> map);
 
-    //租客删除已退租列表
-    //根据roomNO查询
-    List<RoomLeaseList> getRoomLeaseListByRoomNO(String roomNO);
+    //..管理员查询所有的已退租列表
+    List<RoomLeaseList> getAllRoomLeaseByWithout(HashMap<String, Object> map);
 
-    //删除
+    // ..租客查询自己在租列表
+    List<RoomLeaseList> getRoomLeaseByRent(HashMap<String, Object> map);
+
+    // ..租客查询自己已退租列表
+    List<RoomLeaseList> getRoomLeaseByWithout(HashMap<String, Object> map);
+
+    //删除已退租列表
     boolean deleteRoomLeaseList(int roomListID);
 
-    //合同信息
-    RoomLeaseList getContractURL(Integer roomListID);
+    //..批量删除已退租列表
+    boolean batchdeleteRoomLeaseList(List<Integer> roomListID);
 
-    //    管理员查询所有的已退租列表
-    List<RoomLeaseList> getAllRoomLeaseByWithout();
-
-
-
-    //租客查询自己已退租列表
-    List<RoomLeaseList> getRoomLeaseByWithout (String userID);
-
-    //租客查询自己在租列表
-    List<RoomLeaseList> getRoomLeaseByRent(String userID);
-
-
-
-    //终止合同之后的修改
-    boolean updateRoomLeaseList(Map<String,Object> RoomLeaseList);
-
-    //新增
-    boolean addcontractURL(Map<String,String> RoomLeaseList);
+    //..（批量）新增合同
+    R batchAddContract(Map<String, Object> map);
 }
 
 

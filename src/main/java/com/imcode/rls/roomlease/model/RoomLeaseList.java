@@ -16,10 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class RoomLeaseList {
     private Integer roomListID;
     private RoomSource roomNO;
-    private Loginregister userID;
+    private UserInfo userID;
     private Apply applyID;
     private String contractNO;
     private String contractTime;
     private String contractUser;
     private String status;
+    private String userCard;
 }

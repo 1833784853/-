@@ -1,19 +1,16 @@
 package com.imcode.rls.roomlease.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.imcode.common.model.R;
 import com.imcode.common.service.FileService;
 import com.imcode.rls.roomapply.service.ApplyService;
 import com.imcode.rls.roomlease.model.RoomLeaseList;
 import com.imcode.rls.roomlease.service.IRoomLeaseService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,16 +39,16 @@ public class RoomLeaseListController {
         json.put("data", roomLeaseList);
         return json;
     }
-
-    //..租客查询已同意（在租）列表
-    @PostMapping("/selectBystatu")
-    public R selectBystatu(@RequestBody HashMap<String, Object> map) {
-        R json = R.ok();
-        List<RoomLeaseList> roomLeaseList = roomLeaseService.selectBystatu(map);
-        json.put("msg", "请求成功");
-        json.put("data", roomLeaseList);
-        return json;
-    }
+//
+//    //..租客查询已同意（在租）列表
+//    @PostMapping("/selectBystatu")
+//    public R selectBystatu(@RequestBody HashMap<String, Object> map) {
+//        R json = R.ok();
+//        List<RoomLeaseList> roomLeaseList = roomLeaseService.selectBystatu(map);
+//        json.put("msg", "请求成功");
+//        json.put("data", roomLeaseList);
+//        return json;
+//    }
 
     //..管理员查询已同意（在租）列表
     @PostMapping("/cselectBystatu")
@@ -69,134 +66,89 @@ public class RoomLeaseListController {
         return roomLeaseService.addContract(map);
     }
 
+    //..(批量)管理员新增合同
+    @PostMapping("/batchAddContract")
+    public R batchAddContract(@RequestBody Map<String,Object> map) {
+//        ArrayList<Map<String,Object>> maps = new ArrayList<>();
+//        ((ArrayList<String>) map.get("roomLeaseList")).forEach(item->{
+//            maps.add(JSON.parseObject(item,Map.class));
+//        });
+//        System.out.println(maps);
+        return roomLeaseService.batchAddContract(map);
+    }
+
     // ..管理员查询所有的在租列表
     @PostMapping("/getAllRoomLeaseByRent")
     public R getAllRoomLeaseByRent(@RequestBody HashMap<String, Object> map){
         R json = R.ok();
         List<RoomLeaseList> selectByStatus = roomLeaseService.getAllRoomLeaseByRent(map);
         json.put("msg", "请求成功");
-        json.put("data", selectByStatus).put("totalPage",applyServiceimpl.selectid(1).size());
+        json.put("data", selectByStatus).put("totalPage",roomLeaseService.getSelectBystatu("在租").size());
         return json;
     }
 
-
-    //根据roomNO查询
-    @PostMapping("/getRoomLeaseListByRoomNO")
-    public R getRoomLeaseListByRoomNO(@RequestBody Map<String,String> data){
-        R json = R.ok();
-        String roomNO = data.get("roomNO");
-        List<RoomLeaseList> RoomLeaseListByRoomNO = roomLeaseService.getRoomLeaseListByRoomNO(roomNO);
-        json.put("msg", "请求成功");
-        json.put("data", RoomLeaseListByRoomNO);
-        return json;
-    }
-
-//    管理员查询所有的已退租列表
+    // ..管理员查询所有的已退租列表
     @PostMapping("/getAllRoomLeaseByWithout")
-    public R getAllRoomLeaseByWithout(){
+    public R getAllRoomLeaseByWithout(@RequestBody HashMap<String, Object> map){
         R json = R.ok();
-        List<RoomLeaseList> selectByStatus = roomLeaseService.getAllRoomLeaseByWithout();
+        List<RoomLeaseList> selectByStatus = roomLeaseService.getAllRoomLeaseByWithout(map);
         json.put("msg", "请求成功");
-        json.put("data", selectByStatus);
+        json.put("data", selectByStatus).put("totalPage",roomLeaseService.getSelectBystatu("已退租").size());
         return json;
     }
 
-    //    管理员查询所有的空闲列表
-
-
-
-    //租客查询自己已退租列表
-    @PostMapping("/getRoomLeaseByWithout")
-    public R getRoomLeaseByWithout(@RequestBody Map<String,String> data){
-        R json = R.ok();
-        String userID = data.get("userID");
-        List<RoomLeaseList> selectByStatus = roomLeaseService.getRoomLeaseByWithout(userID);
-        json.put("msg", "请求成功");
-        json.put("data", selectByStatus);
-        return json;
+    // ..管理员终止合同
+    @PostMapping("/updateRoomLeaseList")
+    public R updateRoomLeaseList(@RequestBody Map<String,Object> map) {
+        return roomLeaseService.updateRoomLeaseList(map);
     }
 
-    //租客查询自己在租列表
+    // ..租客在租列表
     @PostMapping("/getRoomLeaseByRent")
-    public R getRoomLeaseByRent(@RequestBody Map<String,String> data){
+    public R getRoomLeaseByRent(@RequestBody HashMap<String, Object> map){
         R json = R.ok();
-        String userID = data.get("userID");
-        List<RoomLeaseList> selectByStatus = roomLeaseService.getRoomLeaseByRent(userID);
+        List<RoomLeaseList> selectByStatus = roomLeaseService.getRoomLeaseByRent(map);
         json.put("msg", "请求成功");
-        json.put("data", selectByStatus);
+        json.put("data", selectByStatus).put("totalPage",roomLeaseService.getSelectBystatu("在租").size());
         return json;
     }
 
-    //查询合同（获取图片路径）
-    @PostMapping("/getContractURL")
-    public R getContractURL(Integer roomListID){
+    // ..租客已退租列表
+    @PostMapping("/getRoomLeaseByWithout")
+    public R getRoomLeaseByWithout(@RequestBody HashMap<String, Object> map){
         R json = R.ok();
-        RoomLeaseList roomLeaseList = roomLeaseService.getContractURL(roomListID);
+        List<RoomLeaseList> selectByStatus = roomLeaseService.getRoomLeaseByWithout(map);
         json.put("msg", "请求成功");
-        json.put("data", roomLeaseList);
+        json.put("data", selectByStatus).put("totalPage",roomLeaseService.getSelectBystatu("已退租").size());
         return json;
     }
 
-    //终止合同之后的修改
-    @PostMapping("/RoomLeaseList/update")
-    public R updateRoomLeaseList(@RequestBody Map<String, Object> data) {
+    //..删除已退租列表
+    @PostMapping("/deleteRoomLeaseList")
+    public R deleteRoomLeaseList(@RequestBody Map<String,Integer> roomListID){
         R json;
-        boolean isOK = roomLeaseService.updateRoomLeaseList(data);
-        if (isOK) {
-            json = R.ok();
-            json.put("msg", "更新成功！！");
-        } else {
-            json = R.error("更新失败！！");
-        }
-        return json;
-    }
-
-//    @PostMapping("/RoomLeaseList/add")
-//    public String insertRoomSource(RoomLeaseList roomLeaseList, @RequestParam("multipartFile")MultipartFile multipartFile){
-//        try {
-//            fileService.upload(multipartFile);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-//
-//    //新增
-   @PostMapping("/RoomLeaseList/add")
-    public R insertRoomSource(Map<String, String> data, MultipartFile uploadFile) throws IOException {
-        R json;
-        System.out.println(data);
-        R path;
-        path = fileService.upload(uploadFile);
-        if (path != null){
-            data.put("contractURL", String.valueOf(path));
-            System.out.println("图片上传成功");
+        boolean flag=roomLeaseService.deleteRoomLeaseList(roomListID.get("roomListID"));
+        if(flag){
+            json=R.ok().put("msg","删除成功！");
         }else {
-            System.out.println("图片上传失败");
-        }
-        boolean isOK = roomLeaseService.addcontractURL(data);
-        if (isOK){
-            json = R.ok();
-            json.put("msg", "添加成功！！!");
-        }else {
-            json = R.error("添加失败！！！");
-        }
-    return json;
-}
-    //租客删除已退租列表
-    //删除
-    @PostMapping("/RoomLeaseList/delete")
-    public R deleteRoomLeaseList(@RequestBody Map<String, Integer> map) {
-        R json;
-        boolean roomListID = roomLeaseService.deleteRoomLeaseList(map.get("roomListID"));
-        if (roomListID) {
-            json = R.ok().put("msg","删除成功！！");
-        } else {
-            json = R.error("删除失败");
+            json=R.error("删除失败！");
         }
         return json;
     }
 
+    //..批量删除已退租列表
+    @PostMapping("/batchdeleteRoomLeaseList")
+    public R batchdeleteRoomLeaseList(@RequestBody Map<String,Object> roomListID){
+        List<Integer> roomListIDs=(List<Integer>)roomListID.get("roomListID");
+        R json;
+        boolean flag=roomLeaseService.batchdeleteRoomLeaseList(roomListIDs);
+        if(flag){
+            json=R.ok().put("msg","删除成功！");
+        }else {
+            json=R.error("删除失败！");
+        }
+        return json;
+    }
 }
 
 

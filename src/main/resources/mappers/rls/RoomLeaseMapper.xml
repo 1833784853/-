@@ -22,6 +22,7 @@
         <result property="contractNO" column="contractNO"/>
         <result property="contractTime" column="contractTime"/>
         <result property="contractUser" column="contractUser"/>
+        <result property="userCard" column="userCard"/>
         <result property="status" column="status"/>
         <association property="userID" column="userID" javaType="com.imcode.rls.userinfo.model.UserInfo"
                      select="getUserInfo"/>
@@ -71,14 +72,14 @@
     </select>
 
 
-    <!-- ..租客查询已同意（在租）申请 -->
-    <select id="selectBystatu" resultType="com.imcode.rls.roomapply.model.Apply" parameterType="String">
-        select *
-        from roomapply
-        where applyStatus = 1
-          and userID = #{userID}
-        limit #{currentPage},#{pageSize};
-    </select>
+<!--    &lt;!&ndash; ..租客查询已同意（在租）申请 &ndash;&gt;-->
+<!--    <select id="selectBystatu" resultType="com.imcode.rls.roomapply.model.Apply" parameterType="String">-->
+<!--        select *-->
+<!--        from roomapply-->
+<!--        where applyStatus = 1-->
+<!--          and userID = #{userID}-->
+<!--        limit #{currentPage},#{pageSize};-->
+<!--    </select>-->
 
     <!-- ..管理员查询已同意（在租）申请 -->
     <select id="cselectBystatu" resultMap="roomapplylist">
@@ -90,23 +91,63 @@
 
     <!-- ..管理员新增合同 -->
     <insert id="addContract" parameterType="map">
-        insert into roomleaselist(roomListID,roomNO,userID,contractNO,contractTime,contractUser,status)
-        values (null,#{roomNO},#{userID},#{contractNO},now(),#{contractUser},"在租");
+        insert into roomleaselist(roomListID,roomNO,userID,contractNO,contractTime,contractUser,userCard,status)
+        values (null,#{roomNO},#{userID},#{contractNO},now(),#{contractUser},#{userCard},"在租");
     </insert>
 
-    <!-- ..房源列表状态改变 -->
+    <!-- ..管理员新增合同后房源列表状态改变（已租） -->
     <update id="updateRoomBystatus" parameterType="map">
         update roomsource
-        set roomStatus= "已售"
+        set roomStatus= "已租"
         where roomNO = #{roomNO}
     </update>
 
-    <!-- ..申请状态改变 -->
+    <!-- ..管理员新增合同后申请状态改变 -->
     <update id="updateApplyBystatus" parameterType="map">
         update roomapply
         set applyStatus = 3
         where applyID = #{applyID}
     </update>
+
+
+    <!-- ..（批量）管理员批量新增合同 -->
+    <insert id="batchAddContract" parameterType="list">
+        insert into roomleaselist(roomListID,roomNO,userID,contractNO,contractTime,contractUser,userCard,status)
+        values
+        <foreach collection="list" item="roomlease" separator=",">
+            (
+            null,#{roomlease.roomNO},#{roomlease.userID},#{roomlease.contractNO},
+            now(),#{roomlease.contractUser},#{roomlease.userCard},"在租"
+            )
+        </foreach>
+    </insert>
+
+    <!-- （批量）修改房源列表状态改变（已租） -->
+    <update id="batchupdateRoomBystatus" parameterType="list">
+        update roomsource
+        set roomStatus= "已租"
+        where roomNO in
+        <foreach collection="list" item="roomNO" open="(" separator="," close=")">
+            #{roomNO}
+        </foreach>
+    </update>
+
+    <!-- ..（批量）修改管理员新增合同后申请状态 -->
+    <update id="batchupdateApplyBystatus" parameterType="list">
+        update roomapply
+        set applyStatus = 3
+        where applyID in
+        <foreach collection="list" item="applyID" open="(" separator="," close=")">
+            #{applyID}
+        </foreach>
+    </update>
+
+    <!-- ..根据状态查询 -->
+    <select id="getSelectBystatu" resultMap="roomleaselist" parameterType="String">
+        select *
+        from roomleaselist
+        where status = #{status};
+    </select>
 
     <!-- ..管理员查询所有的在租列表  -->
     <select id="getAllRoomLeaseByRent" resultMap="roomleaselist">
@@ -116,75 +157,58 @@
         limit #{currentPage},#{pageSize};
     </select>
 
-
-
-
-
-
-
-    <!-- 管理员查询所有的已退租列表  -->
-    <select id="getAllRoomLeaseByWithout" resultMap="roomleaselist">
-        select *
-        from roomleaselist
-        where status = "已退租";
-    </select>
-
-    <!-- 租客查询自己已退租列表 -->
-    <select id="getRoomLeaseByWithout" resultMap="roomleaselist" parameterType="string">
-        select *
-        from roomleaselist
-        where status = "已退租"
-          and userID = #{userID};
-    </select>
-
-    <!-- 租客查询自己在租列表 -->
-    <select id="getRoomLeaseByRent" resultMap="roomleaselist" parameterType="string">
-        select *
-        from roomleaselist
-        where status = "在租"
-          and userID = #{userID};
-    </select>
-
-
-
-
-
-
-    <!-- 删除 -->
-    <delete id="deleteRoomLeaseList" parameterType="int">
-        delete
-        from roomleaselist
-        where roomListID = #{roomListID}
-    </delete>
-
-    <!-- 查看合同 -->
-    <select id="getContractURL" parameterType="int" resultType="com.imcode.rls.roomlease.model.RoomLeaseList">
-        select contractURL
-        from roomleaselist
-        where roomListID = #{roomListID};
-    </select>
-
-    <!-- 终止合同之后的修改 -->
+    <!-- ..管理员终止合同 -->
     <update id="updateRoomLeaseList" parameterType="map">
         update roomleaselist
         set status= "已退租"
         where roomListID = #{roomListID}
     </update>
 
-    <!--  新增  -->
-    <insert id="addcontractURL" parameterType="map">
-        insert into roomleaselist(roomListID, roomNO, userID, contractNO, contractURL, contractUser, status)
-        values (null, #{roomNO}, #{userID}, #{contractNO}, #{contractURL}, #{contractUser}, "已出租")
-    </insert>
+    <!-- ..（终止合同之后）管理员房源列表状态改变（空闲） -->
+    <update id="getupdateRoomBystatus" parameterType="map">
+        update roomsource
+        set roomStatus= "空闲"
+        where roomNO = #{roomNO}
+    </update>
+
+    <!-- ..管理员查询所有的已退租列表  -->
+    <select id="getAllRoomLeaseByWithout" resultMap="roomleaselist" parameterType="map">
+        select *
+        from roomleaselist
+        where status = "已退租"
+        limit #{currentPage},#{pageSize};
+    </select>
+
+    <!-- ..租客查询在租列表 -->
+    <select id="getRoomLeaseByRent" resultMap="roomleaselist" parameterType="map">
+        select *
+        from roomleaselist
+        where status = "在租" and userID = #{userID}
+        limit #{currentPage},#{pageSize};
+    </select>
+
+    <!-- ..租客查询已退租列表 -->
+    <select id="getRoomLeaseByWithout" resultMap="roomleaselist" parameterType="map">
+        select *
+        from roomleaselist
+        where status = "已退租" and userID = #{userID}
+        limit #{currentPage},#{pageSize};
+    </select>
+
+    <!-- ..删除已退租列表 -->
+    <delete id="deleteRoomLeaseList" parameterType="int">
+        delete
+        from roomleaselist
+        where roomListID = #{roomListID}
+    </delete>
+
+    <!-- ..（批量）删除已退租列表 -->
+    <delete id="batchdeleteRoomLeaseList" parameterType="list">
+        delete
+        from roomleaselist
+        where roomListID in
+        <foreach collection="list" item="roomListID" open="(" separator="," close=")">
+            #{roomListID}
+        </foreach>
+    </delete>
 </mapper>
-
-
-
-
-
-
-
-
-
-
-

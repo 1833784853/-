@@ -15,7 +15,7 @@
        select * from  roomapply;
     </select>
     <select id="selectApplylist" resultMap="roomapplylist" parameterType="map">
-       select * from  roomapply;
+       select * from  roomapply limit #{currentPage},#{pageSize};
     </select>
     <select id="getUserInfo" resultMap="getLogin">
         select * from userInfo where userID = #{userID};

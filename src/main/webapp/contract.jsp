@@ -162,6 +162,9 @@
 </style>
 <body>
 <div id="top">
+    <div style="margin-left: 100px; line-height: 55px; height: 55px; ">
+        房源编号:${roomNO}
+    </div>
     <div class="left" style="float: right;margin-right: 10px">
         <svg t="1619102552137" class="icon myicon" viewBox="0 0 1024 1024" version="1.1"
              xmlns="http://www.w3.org/2000/svg" p-id="2797">
@@ -176,26 +179,26 @@
     <div>
         <div id="base">
             <p><span class="title">甲方（出租方）：</span>
-                <span class="temp6">李华</span>
+                <span class="temp6">${adminName}</span>
                 <span class="title">身份证号码：</span>
-                <span class="temp">45032320000514242x</span>
+                <span class="temp">${adminCard}</span>
             </p><br>
             <p><span class="title">乙方（承租方）：</span>
-                <span class="temp6"></span>
+                <span class="temp6">${userName}</span>
                 <span class="title">身份证号码：</span>
-                <span class="temp"></span>
+                <span class="temp">${userCard}</span>
             </p><br>
         </div>
 
         <div id="msg">
-            <p><span class="title">第一条&nbsp;房屋基本情况</span>&nbsp;&nbsp;&nbsp;甲方房屋位于<span class="temp1"></span>，
-                房屋建筑面积<span class="temp2"></span>㎡。
+            <p><span class="title">第一条&nbsp;房屋基本情况</span>&nbsp;&nbsp;&nbsp;甲方房屋位于<span class="temp1">${roomAddress}</span>，
+                房屋建筑面积<span class="temp2">${roomArea}</span>㎡。
             </p>
-            <p><span class="title">第二条&nbsp;租金</span>&nbsp;&nbsp;&nbsp;本房屋每月租金为人民币<span class="temp3"></span>元；
+            <p><span class="title">第二条&nbsp;租金</span>&nbsp;&nbsp;&nbsp;本房屋每月租金为人民币<span class="temp3">${price}</span>元；
                 在每月<span class="temp4">12</span>号交给甲方；甲方收到钱给乙方开现金收据。
             </p>
             <p><span class="title">第三条&nbsp;租赁期限</span>&nbsp;&nbsp;&nbsp;
-                租赁时间<span class="temp5"></span>至<span class="temp5"></span>止，为期<span class="temp4"></span>个月。
+                租赁时间<span class="temp5">${time}</span>至<span class="temp5">${endTime}</span>止，为期<span class="temp4">24</span>个月。
             </p>
             <p><span class="title">第四条&nbsp;付款方式</span>&nbsp;&nbsp;&nbsp;
                 乙方在租赁期间，水电费，物业费，燃气费，以及其它有乙方居住而产生的费用都由乙方承担，租赁结束，要交清居住期间产生的欠款。
@@ -204,18 +207,18 @@
                 乙方不得随意损坏房屋设施，如需装修或改造，需先征得甲方同意，并承担装修改造费用，租赁结束时，乙方须将房屋设施恢复原状。
             </p>
             <p><span class="title">第六条</span>&nbsp;&nbsp;&nbsp;
-                租赁期间，任何一方提出终止合同，须提前<span class="temp4"></span>
+                租赁期间，任何一方提出终止合同，须提前<span class="temp4">1</span>
                 个月书面通知对方，经双方同意后方能终止，若乙方强行终止合同，那么租房的押金将不予退还。
             </p>
             <p><span class="title">第七条</span>&nbsp;&nbsp;&nbsp;
-                租赁期满，甲方有权收回出租房屋，乙方应如期交还；乙方如要求续租，则必须在租赁期满<span class="temp4"></span>个月之前书面通知甲方，
+                租赁期满，甲方有权收回出租房屋，乙方应如期交还；乙方如要求续租，则必须在租赁期满<span class="temp4">1</span>个月之前书面通知甲方，
                 经甲方同意后，重新签订租赁合同。
             </p>
             <p><span class="title">第八条</span>&nbsp;&nbsp;&nbsp;
                 发生争议，甲、乙双方友好协商解决，协商不好时，则由当地人民法院仲裁。
             </p>
             <p><span class="title">第九条</span>&nbsp;&nbsp;&nbsp;
-                本合同一式<span class="temp4"></span>份，甲、乙双方各执<span class="temp4"></span>份，自双方签字之日起生效。
+                本合同一式<span class="temp4">2</span>份，甲、乙双方各执<span class="temp4">1</span>份，自双方签字之日起生效。
             </p><br>
         </div>
         <div id="bottom">
