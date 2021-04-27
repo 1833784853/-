@@ -14,6 +14,9 @@
     <select id="selectAll" resultMap="roomapplylist">
        select * from  roomapply;
     </select>
+    <select id="countUserApplySee" parameterType="string" resultType="int">
+        select count(*) from roomapply where userID = #{userID}
+    </select>
     <select id="selectApplylist" resultMap="roomapplylist" parameterType="map">
        select * from  roomapply limit #{currentPage},#{pageSize};
     </select>
@@ -46,7 +49,7 @@
         delete from roomapply where applyID=#{applyID};
     </delete>
     <select id="selectByIdNo" resultMap="roomapplylist" parameterType="map">
-        select * from roomapply where userID=#{userID} and roomNO=#{roomNO} and applyStatus=0;
+        select * from roomapply where userID=#{userID} and roomNO=#{roomNO} and (applyStatus = 0 or applyStatus = 2);
     </select>
 
     <delete id="deleteList" parameterType="list">

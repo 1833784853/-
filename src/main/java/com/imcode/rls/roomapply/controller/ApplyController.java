@@ -68,7 +68,7 @@ public class ApplyController {
             put("pageSize",Integer.parseInt(pageSize));
         }});
         json.put("msg", "请求成功");
-        json.put("data", applyList).put("totalPage", applyServiceimpl.selectAll().size());
+        json.put("data", applyList).put("totalPage", applyServiceimpl.countUserApplySee(userID));
         return json;
     }
     /*

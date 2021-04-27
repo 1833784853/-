@@ -39,16 +39,6 @@ public class RoomLeaseListController {
         json.put("data", roomLeaseList);
         return json;
     }
-//
-//    //..租客查询已同意（在租）列表
-//    @PostMapping("/selectBystatu")
-//    public R selectBystatu(@RequestBody HashMap<String, Object> map) {
-//        R json = R.ok();
-//        List<RoomLeaseList> roomLeaseList = roomLeaseService.selectBystatu(map);
-//        json.put("msg", "请求成功");
-//        json.put("data", roomLeaseList);
-//        return json;
-//    }
 
     //..管理员查询已同意（在租）列表
     @PostMapping("/cselectBystatu")
@@ -148,6 +138,12 @@ public class RoomLeaseListController {
             json=R.error("删除失败！");
         }
         return json;
+    }
+
+    //租客申请退租
+    @PostMapping("/tenantVacating")
+    public R tenantVacating(@RequestBody Map<String,Object> map){
+        return roomLeaseService.tenantVacating(map);
     }
 }
 

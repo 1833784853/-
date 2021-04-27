@@ -2,11 +2,13 @@ package com.imcode.rls.roomsource.controller;
 
 
 import com.imcode.common.model.R;
+import com.imcode.rls.roomlease.model.RoomLeaseList;
 import com.imcode.rls.roomsource.model.RoomSource;
 import com.imcode.rls.roomsource.service.IRoomSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +71,16 @@ public class RoomSourceController {
     @PostMapping("/RoomSource/add")
     public R addRoomSource(@RequestBody Map<String,String> map) {
         return roomSourceServiceImpl.addRoomSource(map);
+    }
+
+    //租客查询空闲列表
+    @PostMapping("/getRoomSourceByStatus")
+    public R getRoomSourceByStatus(@RequestBody HashMap<String, Object> map){
+        R json = R.ok();
+        List<RoomSource> selectByStatus = roomSourceServiceImpl.getRoomSourceByStatus(map);
+        json.put("msg", "请求成功");
+        json.put("data", selectByStatus).put("totalPage", roomSourceServiceImpl.getRoomSelectBystatu("空闲").size());
+        return json;
     }
 
 }

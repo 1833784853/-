@@ -107,4 +107,9 @@ public class ApplyServiceimpl implements ApplyService{
         return applyMapper.updateRefuseList(applyID);
     }
 
+    @Override
+    public int countUserApplySee(String userID) {
+        return applyMapper.countUserApplySee(userID);
+    }
+
 }

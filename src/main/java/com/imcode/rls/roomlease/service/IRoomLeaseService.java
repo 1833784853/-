@@ -51,6 +51,9 @@ public interface IRoomLeaseService {
 
     //..（批量）新增合同
     R batchAddContract(Map<String, Object> map);
+
+    //租客正在退租
+    R tenantVacating(Map<String, Object> map);
 }
 
 

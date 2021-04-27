@@ -19,6 +19,7 @@ public interface ApplyMapper {
     List<Apply> selectid(int applyStatus);  //根据看房申请状态查询
     List<Apply> selectidTenant(HashMap<String, Object> map);  //根据客户id查询
     List<Apply> selectByIdNo(Map<String,String> map);      //根据用户id和房源编号查询
+    int countUserApplySee(String userID); // 获取当前用户的看房申请条数
     boolean update(Map<String, Object> applyStatus);  //修改看房申请状态
     Loginregister getLoginregister();  //用户信息
     RoomSource getRoomSource();   //房源信息

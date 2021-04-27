@@ -1,5 +1,6 @@
 package com.imcode.rls.roomlease.service.impl;
 
+import com.aliyuncs.utils.StringUtils;
 import com.imcode.common.model.R;
 import com.imcode.common.service.FileService;
 import com.imcode.rls.roomlease.mapper.RoomLeaseListMapper;
@@ -8,6 +9,7 @@ import com.imcode.rls.roomlease.service.IRoomLeaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.*;
 
 @Service
@@ -97,7 +99,7 @@ public class RoomLeaseServiceImpl implements IRoomLeaseService {
         return roomLeaseListMapper.getRoomLeaseByWithout(map);
     }
 
-    //删除已退租列表
+    //..删除已退租列表
     public boolean deleteRoomLeaseList(int roomListID){
         return roomLeaseListMapper.deleteRoomLeaseList(roomListID);
     }
@@ -114,19 +116,33 @@ public class RoomLeaseServiceImpl implements IRoomLeaseService {
         R json = null;
         Date date = new Date();
         ArrayList<HashMap<String,Object>> roomLeaseList = (ArrayList<HashMap<String, Object>>) map.get("roomLeaseList");
-        ArrayList<String> roomNOList = new ArrayList<String>();
-        ArrayList<Integer> applyList = new ArrayList<Integer>();
+        ArrayList<Object> roomNOList = new ArrayList<Object>();
+        ArrayList<Object> applyList = new ArrayList<Object>();
         roomLeaseList.forEach(item->{
-            item.put("contractNO",date.getTime()+"");
-            roomNOList.add((String) item.get("roomNO"));
-            applyList.add((Integer) item.get("applyID"));
+            item.put("contractNO",UUID.randomUUID().toString().replaceAll("-",""));
+            roomNOList.add((Object) item.get("roomNO"));
+            applyList.add((Object) item.get("applyID"));
         });
+        System.out.println(roomLeaseList);
         if(roomLeaseListMapper.batchAddContract(roomLeaseList)){
             if(roomLeaseListMapper.batchupdateRoomBystatus(roomNOList) && roomLeaseListMapper.batchupdateApplyBystatus(applyList)){
                 json = R.ok("添加成功");
             }
         }else {
             json = R.error("添加失败");
+        }
+        return json;
+    }
+
+    //租客申请退租
+    public R tenantVacating(Map<String, Object> map){
+        R json = null;
+        if (roomLeaseListMapper.tenantVacating(map)) {
+            if(roomLeaseListMapper.tenantApplyByStatus(map)){
+                json = R.ok("申请退租成功");
+            }
+        } else {
+            json = R.error("申请退租失败");
         }
         return json;
     }

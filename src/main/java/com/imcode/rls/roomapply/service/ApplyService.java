@@ -21,4 +21,5 @@ public interface ApplyService {
     boolean updateAgreeList(List<Integer> applyID);    //批量同意
     boolean updateRefuseList(List<Integer> applyID);    //批量拒绝
 
+    int countUserApplySee(String userID); // 获取当前用户的看房申请条数
 }

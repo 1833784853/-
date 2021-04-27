@@ -17,12 +17,8 @@ public interface RoomLeaseListMapper {
     List<Loginregister> getLoginregister();
     List<RoomSource> getRoomSourceList();
 
-
     //..根据状态查询
     List<RoomLeaseList> getSelectBystatu(String status);
-
-//    //..租客查询在租（申请已同意）
-//    List<RoomLeaseList> selectBystatu(HashMap<String, Object> map);
 
     //..管理员查询在租（已同意）列表
     List<RoomLeaseList> cselectBystatu(HashMap<String, Object> map);
@@ -45,10 +41,10 @@ public interface RoomLeaseListMapper {
     boolean batchAddContract(ArrayList<HashMap<String,Object>> roomLeaseList);
 
     //..（批量）修改房源状态（已租）
-    boolean batchupdateRoomBystatus(List<String> roomLeaseList);
+    boolean batchupdateRoomBystatus(List<Object> roomLeaseList);
 
     //..（批量）修改申请状态
-    boolean batchupdateApplyBystatus(List<Integer> roomLeaseList);
+    boolean batchupdateApplyBystatus(List<Object> roomLeaseList);
 
 
     // ..管理员查询所有的在租列表
@@ -66,7 +62,13 @@ public interface RoomLeaseListMapper {
     // ..租客查询自己在租列表
     List<RoomLeaseList> getRoomLeaseByWithout(HashMap<String, Object> map);
 
-    //删除已退租列表
+    //..租客正在退租
+    boolean tenantVacating(Map<String, Object> map);
+
+    //..租客正在退租后修改申请状态
+    boolean tenantApplyByStatus(Map<String, Object> map);
+
+    //..删除已退租列表
     boolean deleteRoomLeaseList(int roomListID);
 
     //..批量删除已退租列表

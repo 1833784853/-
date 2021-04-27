@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,5 +74,16 @@ public class RoomSourceServiceImpl implements IRoomSourceService {
 
     public R getRoomSourceByRoomNO(String roomNO) {
         return R.ok().put("data",roomSourceMapper.getRoomSourceByRoomNO(roomNO));
+    }
+
+    @Override
+    public List<RoomSource> getRoomSourceByStatus(HashMap<String, Object> map) {
+        map.put("currentPage",(Integer)map.get("currentPage")*(Integer)map.get("pageSize"));
+        return roomSourceMapper.getRoomSourceByStatus(map);
+    }
+
+    @Override
+    public List<RoomSource> getRoomSelectBystatu(String roomStatus) {
+        return roomSourceMapper.getRoomSelectBystatu(roomStatus);
     }
 }

@@ -40,4 +40,20 @@
     <select id="getRoomSourceByRoomNO" parameterType="string" resultMap="roomsourcelist">
         select * from roomsource where roomNO = #{roomNO}
     </select>
+
+    <!-- 查询状态 -->
+    <select id="getRoomSelectBystatu" resultMap="roomsourcelist" parameterType="String">
+        select *
+        from roomsource
+        where roomStatus = #{roomStatus};
+    </select>
+
+    <!-- 租客的房源列表 -->
+    <select id="getRoomSourceByStatus" resultMap="roomsourcelist">
+        select *
+        from roomsource
+        where roomStatus = "空闲"
+        limit #{currentPage},#{pageSize};
+    </select>
+
 </mapper>

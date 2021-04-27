@@ -183,7 +183,7 @@
     <select id="getRoomLeaseByRent" resultMap="roomleaselist" parameterType="map">
         select *
         from roomleaselist
-        where status = "在租" and userID = #{userID}
+        where status = "在租" and userCard = #{userCard}
         limit #{currentPage},#{pageSize};
     </select>
 
@@ -191,9 +191,23 @@
     <select id="getRoomLeaseByWithout" resultMap="roomleaselist" parameterType="map">
         select *
         from roomleaselist
-        where status = "已退租" and userID = #{userID}
+        where status = "已退租" and userCard = #{userCard}
         limit #{currentPage},#{pageSize};
     </select>
+
+    <!-- 租客申请退租 -->
+    <update id="tenantVacating" parameterType="map">
+        update roomleaselist
+        set status= "正在退租"
+        where roomListID = #{roomListID}
+    </update>
+
+    <!-- ..租客申请退租后申请状态改变 -->
+    <update id="tenantApplyByStatus" parameterType="map">
+        update roomapply
+        set applyStatus = 4
+        where userID = #{userID} and roomNO = #{roomNO}
+    </update>
 
     <!-- ..删除已退租列表 -->
     <delete id="deleteRoomLeaseList" parameterType="int">
@@ -211,4 +225,5 @@
             #{roomListID}
         </foreach>
     </delete>
+
 </mapper>
