@@ -6,68 +6,118 @@
     <resultMap id="roomapplylist" type="com.imcode.rls.roomapply.model.Apply">
         <result property="applyID" column="applyID"/>
         <result property="applyStatus" column="applyStatus"/>
+        <result property="roomListID" column="roomListID"/>
         <association property="userID" column="userID" javaType="com.imcode.rls.userinfo.model.UserInfo"
                      select="getUserInfo"/>
         <association property="roomNO" column="roomNO" javaType="com.imcode.rls.roomsource.model.RoomSource"
                      select="getRoomSource"/>
     </resultMap>
+
+    <!--根据applyid查询-->
+    <select id="selectById" resultMap="roomapplylist" parameterType="int">
+        select * from roomapply where applyID=#{applyID}
+    </select>
+    <!--查询所有看房申请列表-->
     <select id="selectAll" resultMap="roomapplylist">
        select * from  roomapply;
     </select>
+    <!--获取当前用户的看房申请条数-->
     <select id="countUserApplySee" parameterType="string" resultType="int">
         select count(*) from roomapply where userID = #{userID}
     </select>
+    <!--获取当前所有申请退房总条数-->
+    <select id="countRefund" resultType="int">
+        select count(*) from roomapply where applyStatus=4
+    </select>
+    <!--查询所有看房申请列表-->
     <select id="selectApplylist" resultMap="roomapplylist" parameterType="map">
        select * from  roomapply limit #{currentPage},#{pageSize};
     </select>
+    <!--根据userID查看userInfo表-->
     <select id="getUserInfo" resultMap="getLogin">
         select * from userInfo where userID = #{userID};
     </select>
+
     <resultMap id="getLogin" type="com.imcode.rls.userinfo.model.UserInfo">
         <association property="userID" column="userID" javaType="com.imcode.rls.user.model.Loginregister" select="getLoginUser" />
     </resultMap>
+    <!---->
     <select id="getLoginUser" resultType="com.imcode.rls.user.model.Loginregister">
         select * from loginregister where userID = #{userID};
     </select>
+    <!--房源信息-->
     <select id="getRoomSource" resultType="com.imcode.rls.roomsource.model.RoomSource">
         select * from roomsource where roomNO = #{roomNO};
     </select>
-
+    <!--根据看房申请状态查询-->
     <select id="selectid" resultMap="roomapplylist" parameterType="int">
        select * from roomapply where applyStatus=#{applyStatus};
    </select>
+    <!--查看申请退租-->
+    <select id="selectRefund" resultMap="roomapplylist" parameterType="map">
+        select * from roomapply where applyStatus=4 limit #{currentPage},#{pageSize};
+    </select>
+    <!--根据客户id查询-->
     <select id="selectidTenant" resultMap="roomapplylist" parameterType="map">
        select * from roomapply where userID=#{userID} limit #{currentPage},#{pageSize};
    </select>
+    <!--修改看房申请状态-->
     <update id="update" parameterType="map">
         update roomapply set applyStatus=#{applyStatus} where applyID=#{applyID};
     </update>
+    <!--租客申请-->
     <insert id="add" parameterType="map">
-        insert into roomapply(applyID,userID,roomNO) values(null,#{userID},#{roomNO});
+        insert into roomapply(applyID,userID,roomNO,roomListID) values(null,#{userID},#{roomNO},null);
     </insert>
+    <!--租客删除已退租列表-->
     <delete id="delete" parameterType="int">
         delete from roomapply where applyID=#{applyID};
     </delete>
+    <!--根据用户id和房源编号查询-->
     <select id="selectByIdNo" resultMap="roomapplylist" parameterType="map">
-        select * from roomapply where userID=#{userID} and roomNO=#{roomNO} and (applyStatus = 0 or applyStatus = 2);
+        select * from roomapply where userID=#{userID} and roomNO=#{roomNO} and applyStatus = 0;
     </select>
-
+    <!--批量删除-->
     <delete id="deleteList" parameterType="list">
         delete from roomapply where applyID in
         <foreach collection="list" item="applyID" open="(" separator="," close=")">
             #{applyID}
         </foreach>
     </delete>
-
+    <!--批量同意-->
     <update id="updateAgreeList" parameterType="list">
         update roomapply set applyStatus=1 where applyID in
         <foreach collection="list" item="applyID" open="(" separator="," close=")">
             #{applyID}
         </foreach>
     </update>
-
+    <!--批量拒绝-->
     <update id="updateRefuseList" parameterType="list">
         update roomapply set applyStatus=2 where applyID in
+        <foreach collection="list" item="applyID" open="(" separator="," close=")">
+            #{applyID}
+        </foreach>
+    </update>
+
+    <!--单个同意退租-->
+    <update id="updateAgreeRefund" parameterType="map">
+        update roomapply set applyStatus=5 where applyID=#{applyID} ;
+    </update>
+    <!--单个拒绝退租-->
+    <update id="updateRefuseRefund" parameterType="int">
+        update roomapply set applyStatus=6 where  applyID=#{applyID};
+    </update>
+
+    <!--批量同意租-->
+    <update id="updateAgreeRefundList" parameterType="int">
+        update roomapply set applyStatus=5 where applyID in
+        <foreach collection="list" item="applyID" open="(" separator="," close=")">
+            #{applyID}
+        </foreach>
+    </update>
+    <!--批量拒绝退租-->
+    <update id="updateRefuseRefundList" parameterType="int">
+        update roomapply set applyStatus=6 where applyID in
         <foreach collection="list" item="applyID" open="(" separator="," close=")">
             #{applyID}
         </foreach>

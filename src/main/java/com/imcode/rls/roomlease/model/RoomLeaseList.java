@@ -21,6 +21,7 @@ public class RoomLeaseList {
     private String contractNO;
     private String contractTime;
     private String contractUser;
+    private int applyId;
     private String status;
     private String userCard;
 }

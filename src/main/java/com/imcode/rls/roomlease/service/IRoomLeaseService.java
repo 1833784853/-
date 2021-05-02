@@ -2,9 +2,11 @@ package com.imcode.rls.roomlease.service;
 
 import com.imcode.common.model.R;
 import com.imcode.rls.roomlease.model.RoomLeaseList;
+import com.sun.org.apache.bcel.internal.generic.RET;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,14 @@ public interface IRoomLeaseService {
     // ..管理员终止合同
     R updateRoomLeaseList(Map<String,Object> map);
 
+    // ..管理员拒绝终止合同
+    R updaterefuseRoomLease(Map<String,Object> map);
+
+    // ..管理员批量同意终止合同
+    R updateRoomLeaseLists(Map<String,Object> roomListID);
+
+    // ..管理员批量拒绝终止合同
+    R updaterefuseRoomLeases(Map<String,Object> roomListID);
     //..管理员查询所有的已退租列表
     List<RoomLeaseList> getAllRoomLeaseByWithout(HashMap<String, Object> map);
 

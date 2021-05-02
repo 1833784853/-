@@ -44,8 +44,8 @@ public class ApplyController {
 
     /*
     管理员根据看房申请状态查询
-    0：表示该房没有被申请  1：同意申请看房   2：拒绝申请看房     3：表示该房被同意申请   4：表示该放被拒绝申请
-    5：表示该房可以被申请退房 6：正在申请退房  7：表示该房被同意申请退房  8：表示该房被拒绝申请退房
+    0：表示该房没有被申请  1：同意申请看房   2：拒绝申请看房     3：表示该房被同意申请   4：表示该房正在申请退租
+    5.表示该房同意申请退租    6.拒绝申请退租
      */
     @GetMapping("/Admin/getApplylistID")
     public R getApplyListIDA(int applyStatus) {
@@ -73,8 +73,8 @@ public class ApplyController {
     }
     /*
     管理员修改看房申请状态
-     0：表示该房没有被申请  1：同意申请看房   2：拒绝申请看房     3：表示该房被同意申请   4：表示该放被拒绝申请
-    5：表示该房可以被申请退房 6：正在申请退房  7：表示该房被同意申请退房  8：表示该房被拒绝申请退房
+     0：表示该房没有被申请  1：同意申请看房   2：拒绝申请看房
+         3：表示该房被同意申请    4：表示该房正在申请退租    5.表示该房同意申请退租    6.拒绝申请退租
      */
     @PostMapping("/Admin/editApply")
     public R editApply(@RequestBody Map<String,Object> applyStatus){
@@ -189,6 +189,90 @@ public class ApplyController {
            json=R.ok().put("msg","删除成功！");
         }else {
             json=R.error("删除失败！");
+        }
+        return json;
+    }
+
+
+    /*
+    管理员查看所有申请退租
+     */
+    @GetMapping("/Admin/getApplylistRefund")
+    public R getApplylistRefund(final String currentPage, final String pageSize) {
+        R json = R.ok();
+        List<Apply> applyList = applyServiceimpl.selectRefund(new HashMap<String,Object>(){{
+
+            put("currentPage",Integer.parseInt(currentPage)*Integer.parseInt(pageSize));
+            put("pageSize",Integer.parseInt(pageSize));
+        }});
+        json.put("msg", "请求成功");
+        json.put("data", applyList).put("totalPage", applyServiceimpl.countRefund());
+        return json;
+    }
+
+
+
+    /*
+    管理员单个同意申请退租
+     */
+    @PostMapping("/Admin/editAgreeRefund")
+    public R editAgreeRefund(@RequestBody Map<String,Object> ID){
+        R json;
+        boolean result=applyServiceimpl.updateAgreeRefund(ID,ID);
+        if(result){
+            json=R.ok();//更新成功
+            json.put("msg","更新成功");
+        }else {
+            json=R.error("更新失败");//更新失败
+        }
+        return json;
+    }
+
+    /*
+    管理员单个拒绝申请退租
+     */
+    @PostMapping("/Admin/editRefuseRefund")
+    public R editRefuseRefund(@RequestBody Map<String,Object> ID){
+        R json;
+        boolean result=applyServiceimpl.updateRefuseRefund((Integer) ID.get("applyID"),ID);
+        if(result){
+            json=R.ok();//更新成功
+            json.put("msg","更新成功");
+        }else {
+            json=R.error("更新失败");//更新失败
+        }
+        return json;
+    }
+
+    /*
+   管理员批量同意申请退租
+    */
+    @PostMapping("/Admin/editAgreeRefundList")
+    public R editAgreeRefundList(@RequestBody Map<String,Object> ID){
+        R json;
+        boolean result=applyServiceimpl.updateAgreeRefundList((List<Integer>) ID.get("applyID"),ID);
+        if(result){
+            json=R.ok();//更新成功
+            json.put("msg","同意成功");
+        }else {
+            json=R.error("同意失败");//更新失败
+        }
+        return json;
+    }
+
+
+    /*
+    管理员批量拒绝申请退租
+     */
+    @PostMapping("/Admin/editRefuseRefundList")
+    public R editRefuseRefundList(@RequestBody Map<String,Object> ID){
+        R json;
+        boolean result=applyServiceimpl.updateRefuseRefundList((List<Integer>) ID.get("applyID"),ID);
+        if(result){
+            json=R.ok();//更新成功
+            json.put("msg","拒绝成功");
+        }else {
+            json=R.error("拒绝失败");//更新失败
         }
         return json;
     }

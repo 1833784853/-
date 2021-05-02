@@ -87,6 +87,55 @@ public class RoomLeaseServiceImpl implements IRoomLeaseService {
         return json;
     }
 
+    /*
+    管理员拒绝终止合同
+     */
+    public R updaterefuseRoomLease(Map<String, Object> map) {
+        R json=null;
+        if(roomLeaseListMapper.updaterefuseRoomLease(map)){
+            if(roomLeaseListMapper.updateRoomByRented(map)){
+                json=R.ok("拒绝终止合同成功");
+            }
+        }else {
+            json=R.error("拒绝终止合同失败");
+        }
+        return json;
+    }
+
+    /*
+    管理员批量终止合同
+     */
+    public R updateRoomLeaseLists(Map<String,Object> roomListID) {
+        List<Map<String,Object>> roomList=(List<Map<String,Object>>)roomListID.get("roomListID");
+        List<Map<String,Object>> roomNO=(List<Map<String,Object>>)roomListID.get("roomNO");
+        R json=null;
+        if(roomLeaseListMapper.updateRoomLeaseLists(roomList)){
+            if (roomLeaseListMapper.getupdateRoomBystatusList(roomNO)){
+                json=R.ok("终止合同成功");
+            }
+        }else {
+            json=R.error("终止合同失败");
+        }
+        return json;
+    }
+
+    /*
+    管理员批量拒绝终止合同
+     */
+    public R updaterefuseRoomLeases(Map<String,Object> roomListID) {
+        List<Map<String,Object>> roomList=(List<Map<String,Object>>)roomListID.get("roomListID");
+        List<Map<String,Object>> roomNO=(List<Map<String,Object>>)roomListID.get("roomNO");
+        R json=null;
+        if(roomLeaseListMapper.updaterefuseRoomLeases(roomList)){
+            if(roomLeaseListMapper.updateRoomByRentedList(roomNO)){
+                json=R.ok("拒绝终止合同成功");
+            }
+        }else {
+            json=R.error("拒绝终止合同失败");
+        }
+        return json;
+    }
+
     //..租客查询在租列表
     public List<RoomLeaseList> getRoomLeaseByRent(HashMap<String, Object> map){
         map.put("currentPage",(Integer)map.get("currentPage")*(Integer)map.get("pageSize"));
@@ -140,6 +189,8 @@ public class RoomLeaseServiceImpl implements IRoomLeaseService {
         if (roomLeaseListMapper.tenantVacating(map)) {
             if(roomLeaseListMapper.tenantApplyByStatus(map)){
                 json = R.ok("申请退租成功");
+            } else {
+                json = R.error("该房已申请退租");
             }
         } else {
             json = R.error("申请退租失败");

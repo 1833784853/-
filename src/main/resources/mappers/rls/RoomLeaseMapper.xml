@@ -23,11 +23,15 @@
         <result property="contractTime" column="contractTime"/>
         <result property="contractUser" column="contractUser"/>
         <result property="userCard" column="userCard"/>
+        <result property="applyId" column="applyId"/>
         <result property="status" column="status"/>
         <association property="userID" column="userID" javaType="com.imcode.rls.userinfo.model.UserInfo"
                      select="getUserInfo"/>
         <association property="roomNO" column="roomNO" javaType="com.imcode.rls.roomsource.model.RoomSource"
                      select="getRoomSourceList"/>
+        <association property="applyID" column="applyID" javaType="com.imcode.rls.roomapply.model.Apply"
+                     select="selectById"/>
+
     </resultMap>
     <resultMap id="roomsourcelist" type="com.imcode.rls.roomsource.model.RoomSource">
         <result property="roomID" column="roomID"/>
@@ -71,6 +75,10 @@
         where roomNO = #{roomNO}
     </select>
 
+    <select id="selectById" resultType="com.imcode.rls.roomapply.model.Apply">
+        select * from roomapply where applyID=#{applyID}
+    </select>
+
 
 <!--    &lt;!&ndash; ..租客查询已同意（在租）申请 &ndash;&gt;-->
 <!--    <select id="selectBystatu" resultType="com.imcode.rls.roomapply.model.Apply" parameterType="String">-->
@@ -91,8 +99,8 @@
 
     <!-- ..管理员新增合同 -->
     <insert id="addContract" parameterType="map">
-        insert into roomleaselist(roomListID,roomNO,userID,contractNO,contractTime,contractUser,userCard,status)
-        values (null,#{roomNO},#{userID},#{contractNO},now(),#{contractUser},#{userCard},"在租");
+        insert into roomleaselist(roomListID,roomNO,userID,contractNO,contractTime,contractUser,userCard,applyID,status)
+        values (null,#{roomNO},#{userID},#{contractNO},now(),#{contractUser},#{userCard},#{applyID},"在租");
     </insert>
 
     <!-- ..管理员新增合同后房源列表状态改变（已租） -->
@@ -112,12 +120,12 @@
 
     <!-- ..（批量）管理员批量新增合同 -->
     <insert id="batchAddContract" parameterType="list">
-        insert into roomleaselist(roomListID,roomNO,userID,contractNO,contractTime,contractUser,userCard,status)
+        insert into roomleaselist(roomListID,roomNO,userID,contractNO,contractTime,contractUser,userCard,applyID,status)
         values
         <foreach collection="list" item="roomlease" separator=",">
             (
             null,#{roomlease.roomNO},#{roomlease.userID},#{roomlease.contractNO},
-            now(),#{roomlease.contractUser},#{roomlease.userCard},"在租"
+            now(),#{roomlease.contractUser},#{roomlease.userCard},#{roomlease.applyID},"在租"
             )
         </foreach>
     </insert>
@@ -164,6 +172,19 @@
         where roomListID = #{roomListID}
     </update>
 
+    <update id="updaterefuseRoomLease" parameterType="map">
+        update roomleaselist
+        set status= "在租"
+        where roomListID = #{roomListID}
+    </update>
+
+    <!-- ..管理员新增合同后房源列表状态改变（已租） -->
+    <update id="updateRoomByRented" parameterType="map">
+        update roomsource
+        set roomStatus= "已租"
+        where roomNO = #{roomNO}
+    </update>
+
     <!-- ..（终止合同之后）管理员房源列表状态改变（空闲） -->
     <update id="getupdateRoomBystatus" parameterType="map">
         update roomsource
@@ -198,15 +219,16 @@
     <!-- 租客申请退租 -->
     <update id="tenantVacating" parameterType="map">
         update roomleaselist
-        set status= "正在退租"
+        set `status` = "正在退租"
         where roomListID = #{roomListID}
     </update>
 
     <!-- ..租客申请退租后申请状态改变 -->
     <update id="tenantApplyByStatus" parameterType="map">
         update roomapply
-        set applyStatus = 4
-        where userID = #{userID} and roomNO = #{roomNO}
+        set applyStatus = 4,
+        roomListID = #{roomListID}
+        where applyID=#{applyID}
     </update>
 
     <!-- ..删除已退租列表 -->
@@ -226,4 +248,42 @@
         </foreach>
     </delete>
 
+    <!-- （批量）修改房源列表状态改变（空闲） -->
+    <update id="getupdateRoomBystatusList" parameterType="list">
+        update roomsource
+        set roomStatus= "空闲"
+        where roomNO in
+        <foreach collection="list" item="roomNO" open="(" separator="," close=")">
+            #{roomNO}
+        </foreach>
+    </update>
+
+    <!-- （批量）修改房源列表状态改变（已租） -->
+    <update id="updateRoomByRentedList" parameterType="list">
+        update roomsource
+        set roomStatus= "已租"
+        where roomNO in
+        <foreach collection="list" item="roomNO" open="(" separator="," close=")">
+            #{roomNO}
+        </foreach>
+    </update>
+
+    <!-- ..管理员批量同意终止合同 -->
+    <update id="updateRoomLeaseLists" parameterType="list">
+        update roomleaselist
+        set status= "已退租"
+        where roomListID in
+        <foreach collection="list" item="roomListID" open="(" separator="," close=")">
+              #{roomListID}
+        </foreach>
+    </update>
+    <!--管理员批量拒绝终止合同-->
+    <update id="updaterefuseRoomLeases" parameterType="list">
+        update roomleaselist
+        set status= "在租"
+        where roomListID in
+        <foreach collection="list" item="roomListID" open="(" separator="," close=")">
+            #{roomListID}
+        </foreach>
+    </update>
 </mapper>
